@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import SideNav from "./ui/nav/sidenav";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,14 +30,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex h-screen flex-col md:overflow-hidden">
-          <div className="w-full flex-none md:w-64">
-            <SideNav />
+        <UserProvider>
+          <div className="flex h-screen flex-col md:overflow-hidden">
+            <div className="w-full flex-none md:w-64">
+              <SideNav />
+            </div>
+            <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+              {children}
+            </div>
           </div>
-          <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
-            {children}
-          </div>
-        </div>
+        </UserProvider>
       </body>
     </html>
   );
