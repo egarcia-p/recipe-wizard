@@ -2,6 +2,26 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Using the App Router.
 
+## Prerequisites
+
+Add environment variables needed for Auth0
+
+```bash
+AUTH0_SECRET=
+AUTH0_BASE_URL=
+AUTH0_ISSUER_BASE_URL=
+AUTH0_CLIENT_ID=
+AUTH0_CLIENT_SECRET=
+AUTH0_AUDIENCE=
+```
+
+AUTH0_SECRET: Secret spoecified during App setup
+AUTH0_BASE_URL= Base url of application e.g localhost:3000
+AUTH0_ISSUER_BASE_URL= Auth0 assigned server url
+AUTH0_CLIENT_ID= Application client id
+AUTH0_CLIENT_SECRET= Application client secret
+AUTH0_AUDIENCE= Application audience (API id)
+
 ## Getting Started
 
 First, run the development server:
