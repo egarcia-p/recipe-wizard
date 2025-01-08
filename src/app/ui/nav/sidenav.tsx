@@ -1,31 +1,31 @@
 import Link from "next/link";
 import NavLinks from "./nav-links";
-//import NavLinks from "@/app/ui/dashboard/nav-links";
-// import { signOut } from "@/auth";
+import { signOut } from "@/auth";
+import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
+import logo from "../../../../public/logo.svg";
+import Image from "next/image";
 
 export default function SideNav() {
   return (
-    <div className="flex flex-row px-3 py-4 md:px-2">
+    <div className="flex h-full flex-col px-3 py-4 md:px-2 border">
       <Link className="" href="/">
-        Logo placeholder
+        <div className="mb-2 flex md:flex-col h-24 items-end justify-start rounded-md bg-white p-4 md:h-44">
+          <div className="w-24 h-auto md:m-auto text-primary-950 md:w-40">
+            {"LOGO PLACEHOLDER"}
+          </div>
+          <div className="w-full m-auto text-primary-950 md:w-40 md:text-center">
+            <p className=" text-lg">Recipe Wizard</p>
+          </div>
+          <div className="w-full m-auto text-primary-950 md:w-40 md:text-center">
+            <p className=" text-sm">v0.0.1</p>
+          </div>
+        </div>
       </Link>
-      <div className="flex grow flex-row justify-between space-x-2 md:space-x-0 md:space-y-2">
+      <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
+        <div className="hidden h-auto w-full grow rounded-md bg-white md:block"></div>
         <a href="/api/auth/login">Login</a>
         <a href="/api/auth/logout">Logout</a>
-        {/* <div className="hidden w-auto grow rounded-md bg-gray-50 md:block"></div> */}
-
-        {/* <form
-          action={async () => {
-            "use server";
-            await signOut();
-          }}
-        >
-          <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-primary-100 hover:text-black-600 md:flex-none md:justify-start md:p-2 md:px-3">
-            <ArrowLeftEndOnRectangleIcon className="w-6" />
-            <div className="hidden md:block">Sign Out</div>
-          </button>
-        </form> */}
       </div>
     </div>
   );

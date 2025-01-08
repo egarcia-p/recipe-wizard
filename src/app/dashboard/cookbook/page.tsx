@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { fetchAllRecipes } from "../lib/data";
-import { Recipe } from "../types/types";
+import { fetchAllRecipes } from "../../lib/data";
+import { Recipe } from "../../types/types";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export const getRecipes = async () => {
   }
 };
 
-export default async function Recipes() {
+export default async function Cookbook() {
   const recipes: Recipe[] = await getRecipes();
 
   return (
