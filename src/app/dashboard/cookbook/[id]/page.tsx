@@ -17,6 +17,7 @@ export const getRecipes = async () => {
       throw new Error("Failed to get access token.");
     }
 
+    // TODO send id of cookbook to fetch recipes for that cookbook
     const recipes = await fetchAllRecipes(accessToken);
 
     if (!recipes || recipes.length === 0) {
