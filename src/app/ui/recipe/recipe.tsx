@@ -1,11 +1,33 @@
 import type { Recipe } from "@/app/types/types";
+import { SectionSteps } from "./section-steps";
+import { SectionIngredients } from "./section-ingredients";
 
 export function RecipeComponent({ recipe }: { recipe: Recipe }) {
-  const steps =
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis consequuntur quisquam, quam corporis cupiditate aliquid esse id! Quas dicta ad nobis consequatur ipsum cupiditate alias! Consectetur rem quam iure nam.";
-
   return (
     <div className="w-full  p-2 shadow-sm">
+      <div className="flex">
+        <h1 className="m-2 text-xl md:text-4xl font-medium">{recipe.title}</h1>
+        <h1 className="m-2 text-lg md:text-2xl font-medium">
+          {recipe.subtitle}
+        </h1>
+      </div>
+      <div className="flex flex-row w-full justify-left">
+        <div>
+          <span className="m-2 text-sm md:text-lg font-light">
+            {recipe.author}
+          </span>
+        </div>
+        <div>
+          <span className="m-2 text-sm md:text-lg font-light">
+            Servings:{recipe.servings}
+          </span>
+        </div>
+        <div>
+          <span className="m-2 text-sm md:text-lg font-light">
+            Servings:{recipe.total_time}
+          </span>
+        </div>
+      </div>
       <div className="flex justify-center">
         <img
           className="rounded-xl"
@@ -13,14 +35,17 @@ export function RecipeComponent({ recipe }: { recipe: Recipe }) {
           alt="Placeholder"
         />
       </div>
-      <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-        <div className="w-full flex-none md:w-64">Ingredients:</div>
-        <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
-          <div className="flex p-4">
-            <h3 className="ml-2 text-sm font-medium">{recipe.title}</h3>
-          </div>
+      <div className="flex h-screen flex-col p-6 md:p-12 md:flex-row md:overflow-hidden">
+        <div className="w-full flex-none md:w-64">
+          {recipe.sections.map((section) => (
+            <SectionIngredients key={section.id} section={section} />
+          ))}
+        </div>
+        <div className="flex-grow md:overflow-y-auto ">
           <div>
-            <p className="ml-2 text-sm">{steps}</p>
+            {recipe.sections.map((section) => (
+              <SectionSteps key={section.id} section={section} />
+            ))}
           </div>
         </div>
       </div>
