@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { fetchAllRecipes } from "../../../lib/data";
 import { Recipe } from "../../../types/types";
 import { getAccessToken } from "@auth0/nextjs-auth0";
-import { title } from "process";
 import { Card } from "@/app/ui/dashboard/card";
 
 export const metadata: Metadata = {
