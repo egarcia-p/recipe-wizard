@@ -44,3 +44,8 @@ export interface RecipeIngredient {
   created_at: string;
   updated_at: string;
 }
+
+export interface Cookbook {
+  id: number;
+  name: string;
+}
