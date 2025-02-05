@@ -1,4 +1,4 @@
-const SERVER_URL = "http://localhost:3300";
+const SERVER_URL = process.env.API_SERVER_URL;
 
 export async function fetchAllRecipes(accessToken: string) {
   console.log("accessToken", accessToken);
