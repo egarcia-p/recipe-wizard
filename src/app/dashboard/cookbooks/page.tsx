@@ -38,7 +38,7 @@ export default async function Page() {
       <h1 className="text-4xl font-bold text-center sm:text-left">Cookbooks</h1>
 
       <div className="flex flex-row flex-wrap gap-4 justify-start content-start w-full">
-        <CreateCard name="Create Cookbook" url="/dashboard/cookbooks/create" />
+        <CreateCard name="Create Cookbook" url="/dashboard/cookbook/create" />
         <CookbookCard key={"All"} name="All" id={-1} />
         {cookbooks.map((cookbook) => (
           <CookbookCard
