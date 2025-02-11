@@ -124,7 +124,7 @@ export default function Form({
                 name="total_time"
                 type="number"
                 step="1.0"
-                placeholder="Enter Time in minutes"
+                placeholder="Enter time in minutes"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="total_time-error"
               />
@@ -152,7 +152,7 @@ export default function Form({
                 id="author"
                 name="author"
                 type="text"
-                placeholder="Enter a author"
+                placeholder="Enter author's name"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="author-error"
               />
