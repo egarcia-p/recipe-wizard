@@ -5,18 +5,19 @@ import { getAccessToken } from "@auth0/nextjs-auth0";
 import { title } from "process";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Cookbook } from "../types/types";
 
 const SERVER_URL = process.env.API_SERVER_URL;
 
 const SectionSchema = z.object({
   id: z.number(),
-  name: z.string(),
+  name: z.string().nonempty(),
   recipe_id: z.number(),
   sort_number: z.number(),
   steps: z.array(
     z.object({
       id: z.number(),
-      description: z.string(),
+      description: z.string().nonempty(),
       step_number: z.number(),
       recipe_id: z.number(),
       section_id: z.number(),
@@ -27,11 +28,8 @@ const SectionSchema = z.object({
       id: z.number(),
       recipe_id: z.number(),
       ingredient_id: z.number(),
-      name: z.string(),
-      uom_id: z.number(),
-      uom_name: z.string(),
-      short_name: z.string().nullable(),
       quantity: z.number(),
+      uom_id: z.number(),
       section_id: z.number(),
     })
   ),
@@ -39,13 +37,18 @@ const SectionSchema = z.object({
 
 const RecipeFormSchema = z.object({
   id: z.string(),
-  title: z.string(),
+  title: z.string().nonempty(),
   subtitle: z.string().nullable(),
-  author: z.string(),
-  servings: z.number(),
-  total_time: z.number(),
-  category_id: z.number(),
-  subcategory_id: z.number(),
+  author: z.string().nonempty(),
+  servings: z.coerce
+    .number()
+    .gt(0, { message: "Servings must be greater than 0" }),
+  total_time: z.coerce
+    .number()
+    .gt(0, { message: "Total time must be greater than 0" }),
+  category_id: z.coerce.number(),
+  subcategory_id: z.coerce.number(),
+  cookbook_id: z.coerce.number().nullable(),
   sections: z.array(SectionSchema),
 });
 
@@ -62,6 +65,7 @@ export type RecipeState = {
     total_time?: string[];
     category_id?: string[];
     subcategory_id?: string[];
+    cookbook_id?: string[];
     sections?: {
       name?: string[];
       steps?: {
@@ -103,7 +107,12 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
     category_id: formData.get("category_id"),
     subcategory_id: formData.get("subcategory_id"),
     sections: formData.getAll("sections"),
+    cookbook_id: formData.get("cookbook_id"),
   });
+
+  console.log(formData);
+
+  console.log(formData.get("servings"));
 
   if (!validatedFields.success) {
     return {
@@ -121,6 +130,7 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
     category_id,
     subcategory_id,
     sections,
+    cookbook_id,
   } = validatedFields.data;
 
   try {
@@ -133,6 +143,7 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
       category_id: category_id,
       subcategory_id: subcategory_id,
       sections: sections,
+      cookbook_id: cookbook_id,
     };
 
     console.log(recipe);

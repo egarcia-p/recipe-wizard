@@ -37,15 +37,17 @@ export function RecipeComponent({ recipe }: { recipe: Recipe }) {
       </div>
       <div className="flex h-screen flex-col p-6 md:p-12 md:flex-row md:overflow-hidden">
         <div className="w-full flex-none md:w-64">
-          {recipe.sections.map((section) => (
-            <SectionIngredients key={section.id} section={section} />
-          ))}
+          {recipe.sections &&
+            recipe.sections.map((section) => (
+              <SectionIngredients key={section.id} section={section} />
+            ))}
         </div>
         <div className="flex-grow md:overflow-y-auto ">
           <div>
-            {recipe.sections.map((section) => (
-              <SectionSteps key={section.id} section={section} />
-            ))}
+            {recipe.sections &&
+              recipe.sections.map((section) => (
+                <SectionSteps key={section.id} section={section} />
+              ))}
           </div>
         </div>
       </div>

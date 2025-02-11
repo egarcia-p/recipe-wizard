@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Recipes",
 };
 
-export const getRecipe = async () => {
+export const getRecipe = async ({ id }: { id: string }) => {
   try {
     const { accessToken } = await getAccessToken();
 
@@ -18,7 +18,7 @@ export const getRecipe = async () => {
 
     console.log("accessToken", accessToken);
 
-    const recipe = await fetchReciepeById(accessToken, "1"); // TODO Check ids?
+    const recipe = await fetchReciepeById(accessToken, id);
 
     if (!recipe || recipe.length === 0) {
       throw new Error("Failed to fetch recipe by id.");
@@ -31,8 +31,8 @@ export const getRecipe = async () => {
   }
 };
 
-export default async function Page() {
-  const recipe: Recipe = await getRecipe();
+export default async function Page({ params }: { params: { id: string } }) {
+  const recipe: Recipe = await getRecipe({ id: params.id });
 
   return (
     <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
