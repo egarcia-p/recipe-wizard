@@ -10,27 +10,29 @@ import { Cookbook } from "../types/types";
 const SERVER_URL = process.env.API_SERVER_URL;
 
 const SectionSchema = z.object({
-  id: z.number(),
+  //id: z.number().nullable(),
   name: z.string().nonempty(),
-  recipe_id: z.number(),
-  sort_number: z.number(),
-  steps: z.array(
+  //recipe_id: z.number().nullable(),
+  sort_number: z.coerce
+    .number()
+    .gt(0, { message: "Sort Number must be greater than 0" }),
+  steps_attributes: z.array(
     z.object({
-      id: z.number(),
+      //id: z.number().nullable(),
       description: z.string().nonempty(),
-      step_number: z.number(),
-      recipe_id: z.number(),
-      section_id: z.number(),
+      step_number: z.coerce
+        .number()
+        .gt(0, { message: "Step must be greater than 0" }),
+      //section_id: z.number().nullable(),
     })
   ),
-  recipe_ingredients: z.array(
+  recipe_ingredients_attributes: z.array(
     z.object({
-      id: z.number(),
-      recipe_id: z.number(),
-      ingredient_id: z.number(),
+      //id: z.number().nullable(),
+      ingredient_id: z.coerce.number(),
       quantity: z.number(),
-      uom_id: z.number(),
-      section_id: z.number(),
+      uom_id: z.coerce.number(),
+      //section_id: z.number().nullable(),
     })
   ),
 });
@@ -54,6 +56,8 @@ const RecipeFormSchema = z.object({
 
 const CreateRecipe = RecipeFormSchema.omit({ id: true });
 
+const SectionsFormSchema = z.array(SectionSchema);
+
 //const UpdateRecipe = RecipeFormSchema.omit({ id: true });
 
 export type RecipeState = {
@@ -68,11 +72,11 @@ export type RecipeState = {
     cookbook_id?: string[];
     sections?: {
       name?: string[];
-      steps?: {
+      steps_attributes?: {
         description?: string[];
         step_number?: string[];
       }[];
-      recipe_ingredients?: {
+      recipe_ingredients_attributes?: {
         name?: string[];
         uom_name?: string[];
         short_name?: string[];
@@ -98,6 +102,18 @@ export type CookbookState = {
 };
 
 export async function createRecipe(prevState: RecipeState, formData: FormData) {
+  const sectionsForm = JSON.parse(formData.get("sections") as string);
+
+  const validatedSections = SectionsFormSchema.safeParse(sectionsForm);
+
+  if (!validatedSections.success) {
+    return {
+      errors: {
+        sections: validatedSections.error.flatten().fieldErrors,
+      },
+      message: "Error in Sections. Failed to Create Recipe.",
+    };
+  }
   const validatedFields = CreateRecipe.safeParse({
     title: formData.get("title"),
     subtitle: formData.get("subtitle"),
@@ -106,13 +122,9 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
     total_time: formData.get("total_time"),
     category_id: formData.get("category_id"),
     subcategory_id: formData.get("subcategory_id"),
-    sections: formData.getAll("sections"),
+    sections: sectionsForm,
     cookbook_id: formData.get("cookbook_id"),
   });
-
-  console.log(formData);
-
-  console.log(formData.get("servings"));
 
   if (!validatedFields.success) {
     return {
@@ -142,11 +154,9 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
       total_time: total_time,
       category_id: category_id,
       subcategory_id: subcategory_id,
-      sections: sections,
+      sections_attributes: sections,
       cookbook_id: cookbook_id,
     };
-
-    console.log(recipe);
 
     const { accessToken } = await getAccessToken();
 
@@ -192,9 +202,6 @@ export async function createCookbook(
     const object = {
       name: name,
     };
-
-    console.log(object);
-    console.log(JSON.stringify(object));
 
     const { accessToken } = await getAccessToken();
 

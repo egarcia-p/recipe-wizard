@@ -3,7 +3,7 @@
 import { createRecipe } from "@/app/lib/action";
 import { Cookbook } from "@/app/types/types";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Button } from "../button";
 
 export default function Form({
@@ -16,14 +16,65 @@ export default function Form({
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useActionState(createRecipe, initialState);
 
-  console.log(cookbooks);
+  const [sections, setSections] = useState([
+    {
+      name: "",
+      sort_number: 1,
+      steps_attributes: [{ description: "", step_number: 1 }],
+      recipe_ingredients_attributes: [
+        { ingredient_id: 0, quantity: 1, uom_id: 0 },
+      ],
+    },
+  ]);
+
+  const handleSectionChange = (index, field, value) => {
+    const newSections = [...sections];
+    newSections[index][field] = value;
+    setSections(newSections);
+  };
+
+  const handleStepChange = (sectionIndex, stepIndex, field, value) => {
+    const newSections = [...sections];
+    newSections[sectionIndex].steps_attributes[stepIndex][field] = value;
+    setSections(newSections);
+  };
+
+  const handleIngredientChange = (
+    sectionIndex,
+    ingredientIndex,
+    field,
+    value
+  ) => {
+    const newSections = [...sections];
+    newSections[sectionIndex].recipe_ingredients_attributes[ingredientIndex][
+      field
+    ] = value;
+    setSections(newSections);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("title", event.target.title.value);
+    formData.append("subtitle", event.target.subtitle.value);
+    formData.append("author", event.target.author.value);
+    formData.append("servings", event.target.servings.value);
+    formData.append("total_time", event.target.total_time.value);
+    formData.append("category_id", event.target.category_id.value);
+    formData.append("subcategory_id", event.target.subcategory_id.value);
+    formData.append("cookbook_id", event.target.cookbook_id.value);
+    formData.append("sections", JSON.stringify(sections));
+
+    // Send formData to the server
+    createRecipe(state, formData);
+  };
 
   return (
     <>
       <div id="message-error">
         {state.message && <p className="mt-2 text-red-500"> {state.message}</p>}
       </div>
-      <form action={dispatch}>
+      <form onSubmit={handleSubmit}>
         {/* Title */}
         <div className="mb-4">
           <label htmlFor="title" className="mb-2 block text-sm font-medium">
@@ -295,6 +346,124 @@ export default function Form({
             </div>
           </div>
         </div>
+
+        {/* Sections */}
+        {sections.map((section, sectionIndex) => (
+          <div key={sectionIndex}>
+            <h3>Section {sectionIndex + 1}</h3>
+            <label>
+              Name:
+              <input
+                type="text"
+                value={section.name}
+                onChange={(e) =>
+                  handleSectionChange(sectionIndex, "name", e.target.value)
+                }
+              />
+            </label>
+            <label>
+              Sort Number:
+              <input
+                type="number"
+                value={section.sort_number}
+                onChange={(e) =>
+                  handleSectionChange(
+                    sectionIndex,
+                    "sort_number",
+                    e.target.value
+                  )
+                }
+              />
+            </label>
+            <h4>Steps</h4>
+            {section.steps_attributes.map((step, stepIndex) => (
+              <div key={stepIndex}>
+                <label>
+                  Description:
+                  <input
+                    type="text"
+                    value={step.description}
+                    onChange={(e) =>
+                      handleStepChange(
+                        sectionIndex,
+                        stepIndex,
+                        "description",
+                        e.target.value
+                      )
+                    }
+                  />
+                </label>
+                <label>
+                  Step Number:
+                  <input
+                    type="number"
+                    value={step.step_number}
+                    onChange={(e) =>
+                      handleStepChange(
+                        sectionIndex,
+                        stepIndex,
+                        "step_number",
+                        e.target.value
+                      )
+                    }
+                  />
+                </label>
+              </div>
+            ))}
+            <h4>Ingredients</h4>
+            {section.recipe_ingredients_attributes.map(
+              (ingredient, ingredientIndex) => (
+                <div key={ingredientIndex}>
+                  <label>
+                    ID:
+                    <input
+                      type="number"
+                      value={ingredient.ingredient_id}
+                      onChange={(e) =>
+                        handleIngredientChange(
+                          sectionIndex,
+                          ingredientIndex,
+                          "ingredient_id",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </label>
+                  <label>
+                    Quantity:
+                    <input
+                      type="number"
+                      value={ingredient.quantity}
+                      onChange={(e) =>
+                        handleIngredientChange(
+                          sectionIndex,
+                          ingredientIndex,
+                          "quantity",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </label>
+                  <label>
+                    Unit of Measure ID:
+                    <input
+                      type="number"
+                      value={ingredient.uom_id}
+                      onChange={(e) =>
+                        handleIngredientChange(
+                          sectionIndex,
+                          ingredientIndex,
+                          "uom_id",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </label>
+                </div>
+              )
+            )}
+          </div>
+        ))}
 
         <div className="mt-6 flex justify-end gap-4">
           <Link
