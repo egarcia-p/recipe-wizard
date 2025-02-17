@@ -5,6 +5,7 @@ import { Cookbook } from "@/app/types/types";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { Button } from "../button";
+import { CreateSectionComponent } from "./create-section";
 
 export default function Form({
   cookbooks,
@@ -52,6 +53,39 @@ export default function Form({
     setSections(newSections);
   };
 
+  const handleNewSection = () => {
+    setSections([
+      ...sections,
+      {
+        name: "",
+        sort_number: sections.length + 1,
+        steps_attributes: [{ description: "", step_number: 1 }],
+        recipe_ingredients_attributes: [
+          { ingredient_id: 0, quantity: 1, uom_id: 0 },
+        ],
+      },
+    ]);
+  };
+
+  const handleNewStep = (sectionIndex) => {
+    const newSections = [...sections];
+    newSections[sectionIndex].steps_attributes.push({
+      description: "",
+      step_number: newSections[sectionIndex].steps_attributes.length + 1,
+    });
+    setSections(newSections);
+  };
+
+  const handleNewRecipeIngredient = (sectionIndex) => {
+    const newSections = [...sections];
+    newSections[sectionIndex].recipe_ingredients_attributes.push({
+      ingredient_id: 0,
+      quantity: 1,
+      uom_id: 0,
+    });
+    setSections(newSections);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -65,8 +99,9 @@ export default function Form({
     formData.append("cookbook_id", event.target.cookbook_id.value);
     formData.append("sections", JSON.stringify(sections));
 
+    console.log(sections);
     // Send formData to the server
-    createRecipe(state, formData);
+    //createRecipe(state, formData);
   };
 
   return (
@@ -347,122 +382,21 @@ export default function Form({
           </div>
         </div>
 
+        <Button type="button" onClick={handleNewSection}>
+          Add New Section
+        </Button>
         {/* Sections */}
         {sections.map((section, sectionIndex) => (
-          <div key={sectionIndex}>
-            <h3>Section {sectionIndex + 1}</h3>
-            <label>
-              Name:
-              <input
-                type="text"
-                value={section.name}
-                onChange={(e) =>
-                  handleSectionChange(sectionIndex, "name", e.target.value)
-                }
-              />
-            </label>
-            <label>
-              Sort Number:
-              <input
-                type="number"
-                value={section.sort_number}
-                onChange={(e) =>
-                  handleSectionChange(
-                    sectionIndex,
-                    "sort_number",
-                    e.target.value
-                  )
-                }
-              />
-            </label>
-            <h4>Steps</h4>
-            {section.steps_attributes.map((step, stepIndex) => (
-              <div key={stepIndex}>
-                <label>
-                  Description:
-                  <input
-                    type="text"
-                    value={step.description}
-                    onChange={(e) =>
-                      handleStepChange(
-                        sectionIndex,
-                        stepIndex,
-                        "description",
-                        e.target.value
-                      )
-                    }
-                  />
-                </label>
-                <label>
-                  Step Number:
-                  <input
-                    type="number"
-                    value={step.step_number}
-                    onChange={(e) =>
-                      handleStepChange(
-                        sectionIndex,
-                        stepIndex,
-                        "step_number",
-                        e.target.value
-                      )
-                    }
-                  />
-                </label>
-              </div>
-            ))}
-            <h4>Ingredients</h4>
-            {section.recipe_ingredients_attributes.map(
-              (ingredient, ingredientIndex) => (
-                <div key={ingredientIndex}>
-                  <label>
-                    ID:
-                    <input
-                      type="number"
-                      value={ingredient.ingredient_id}
-                      onChange={(e) =>
-                        handleIngredientChange(
-                          sectionIndex,
-                          ingredientIndex,
-                          "ingredient_id",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </label>
-                  <label>
-                    Quantity:
-                    <input
-                      type="number"
-                      value={ingredient.quantity}
-                      onChange={(e) =>
-                        handleIngredientChange(
-                          sectionIndex,
-                          ingredientIndex,
-                          "quantity",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </label>
-                  <label>
-                    Unit of Measure ID:
-                    <input
-                      type="number"
-                      value={ingredient.uom_id}
-                      onChange={(e) =>
-                        handleIngredientChange(
-                          sectionIndex,
-                          ingredientIndex,
-                          "uom_id",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </label>
-                </div>
-              )
-            )}
-          </div>
+          <CreateSectionComponent
+            key={sectionIndex}
+            section={section}
+            sectionIndex={sectionIndex}
+            handleSectionChange={handleSectionChange}
+            handleStepChange={handleStepChange}
+            handleIngredientChange={handleIngredientChange}
+            handleNewStep={handleNewStep}
+            handleNewRecipeIngredient={handleNewRecipeIngredient}
+          />
         ))}
 
         <div className="mt-6 flex justify-end gap-4">
