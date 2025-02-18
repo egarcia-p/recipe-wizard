@@ -101,7 +101,7 @@ export default function Form({
 
     console.log(sections);
     // Send formData to the server
-    //createRecipe(state, formData);
+    createRecipe(state, formData);
   };
 
   return (
