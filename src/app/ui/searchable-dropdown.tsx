@@ -19,7 +19,7 @@ const SearchableDropdown = ({
 
   const selectOption = (option) => {
     setQuery(() => "");
-    handleChange(option[label]);
+    handleChange(option[id]);
     setIsOpen((isOpen) => !isOpen);
   };
 
@@ -29,7 +29,12 @@ const SearchableDropdown = ({
 
   const getDisplayValue = () => {
     if (query) return query;
-    if (selectedVal) return selectedVal;
+    if (selectedVal) {
+      const selectedOption = options.find(
+        (option) => option.id === selectedVal
+      );
+      return selectedOption.name;
+    }
 
     return "";
   };

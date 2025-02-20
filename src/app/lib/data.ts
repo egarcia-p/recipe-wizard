@@ -64,3 +64,51 @@ export async function fetchRecipesForCookbook(accessToken: string, id: string) {
   const result = await response.json();
   return result;
 }
+
+export async function fetchCategories(accessToken: string) {
+  const response = await fetch(SERVER_URL + "/api/v1/categories/index", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+  return result;
+}
+
+export async function fetchSubcategories(accessToken: string) {
+  const response = await fetch(SERVER_URL + "/api/v1/subcategories/index", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+  return result;
+}
+
+export async function fetchIngredients(accessToken: string) {
+  const response = await fetch(SERVER_URL + "/api/v1/ingredients/index", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+  return result;
+}
+
+export async function fetchUoms(accessToken: string) {
+  const response = await fetch(SERVER_URL + "/api/v1/uoms/index", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+  return result;
+}

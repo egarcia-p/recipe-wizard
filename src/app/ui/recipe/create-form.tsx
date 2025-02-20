@@ -1,7 +1,13 @@
 "use client";
 
 import { createRecipe } from "@/app/lib/action";
-import { Cookbook } from "@/app/types/types";
+import {
+  Category,
+  Cookbook,
+  Ingredient,
+  Subcategory,
+  Uom,
+} from "@/app/types/types";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { Button } from "../button";
@@ -10,9 +16,15 @@ import { CreateSectionComponent } from "./create-section";
 export default function Form({
   cookbooks,
   categories,
+  subcategories,
+  ingredients,
+  uoms,
 }: {
-  cookbooks: Object;
-  categories: Object;
+  cookbooks: Cookbook[];
+  categories: Category[];
+  subcategories: Subcategory[];
+  ingredients: Ingredient[];
+  uoms: Uom[];
 }) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useActionState(createRecipe, initialState);
@@ -276,9 +288,9 @@ export default function Form({
                   Select a category
                 </option>
                 {Object.entries(categories).map(
-                  ([key, value]: [string, string]) => (
-                    <option key={key} value={key}>
-                      {value}
+                  ([, category]: [string, Category]) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
                     </option>
                   )
                 )}
@@ -316,10 +328,10 @@ export default function Form({
                 <option value="" disabled>
                   Select a subcategory
                 </option>
-                {Object.entries(categories).map(
-                  ([key, value]: [string, string]) => (
-                    <option key={key} value={key}>
-                      {value}
+                {Object.entries(subcategories).map(
+                  ([, subcategory]: [string, Subcategory]) => (
+                    <option key={subcategory.id} value={subcategory.id}>
+                      {subcategory.name}
                     </option>
                   )
                 )}
@@ -362,9 +374,9 @@ export default function Form({
                   Select a cookbook
                 </option>
                 {Object.entries(cookbooks).map(
-                  ([key, value]: [string, string]) => (
-                    <option key={key} value={key}>
-                      {value}
+                  ([, cookbook]: [string, Cookbook]) => (
+                    <option key={cookbook.id} value={cookbook.id}>
+                      {cookbook.name}
                     </option>
                   )
                 )}
@@ -391,6 +403,8 @@ export default function Form({
             key={sectionIndex}
             section={section}
             sectionIndex={sectionIndex}
+            ingredients={ingredients}
+            uoms={uoms}
             handleSectionChange={handleSectionChange}
             handleStepChange={handleStepChange}
             handleIngredientChange={handleIngredientChange}

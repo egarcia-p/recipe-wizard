@@ -67,3 +67,28 @@ export interface Cookbook {
   id: number;
   name: string;
 }
+
+export interface Category {
+  id: number;
+  name: string;
+}
+
+export interface Subcategory {
+  id: number;
+  name: string;
+  category_id: number;
+}
+
+export interface Ingredient {
+  id: number;
+  name: string;
+}
+
+export interface Uom {
+  id: number;
+  name: string;
+  base_unit: string;
+  system: string;
+  conversion: number;
+  shortname: string;
+}

@@ -1,8 +1,9 @@
 "use client";
 
-import { SectionForm } from "@/app/types/types";
+import { Ingredient, SectionForm, Uom } from "@/app/types/types";
 import { Button } from "../button";
-
+import SearchableDropdown from "../searchable-dropdown";
+import { useState } from "react";
 type CallbackSectionFunction = (
   index: number,
   field: string,
@@ -26,6 +27,8 @@ type CallbackNewRecipeIngredient = (sectionIndex: number) => void;
 export function CreateSectionComponent({
   section,
   sectionIndex,
+  ingredients,
+  uoms,
   handleSectionChange,
   handleStepChange,
   handleIngredientChange,
@@ -34,12 +37,20 @@ export function CreateSectionComponent({
 }: {
   section: SectionForm;
   sectionIndex: number;
+  ingredients: Ingredient[];
+  uoms: Uom[];
   handleSectionChange: CallbackSectionFunction;
   handleStepChange: CallbackStepFunction;
   handleIngredientChange: CallbackIngredientFunction;
   handleNewStep: CallbackNewStep;
   handleNewRecipeIngredient: CallbackNewRecipeIngredient;
 }) {
+  const [ingredientInput, setIngredientInput] = useState(
+    "Select ingredient..."
+  );
+
+  const [uomInput, setUomInput] = useState("Select Unit of Measure...");
+
   return (
     <>
       {/* Sections */}
@@ -114,7 +125,7 @@ export function CreateSectionComponent({
           {section.recipe_ingredients_attributes.map(
             (ingredient, ingredientIndex) => (
               <div key={ingredientIndex}>
-                <label>
+                {/* <label>
                   ID:
                   <input
                     type="number"
@@ -128,7 +139,22 @@ export function CreateSectionComponent({
                       )
                     }
                   />
-                </label>
+                </label> */}
+                <label>ID Drop:</label>
+                <SearchableDropdown
+                  options={ingredients}
+                  label="name"
+                  id="id"
+                  selectedVal={ingredient.ingredient_id}
+                  handleChange={(value) =>
+                    handleIngredientChange(
+                      sectionIndex,
+                      ingredientIndex,
+                      "ingredient_id",
+                      value
+                    )
+                  }
+                />
                 <label>
                   Quantity:
                   <input
@@ -146,15 +172,17 @@ export function CreateSectionComponent({
                 </label>
                 <label>
                   Unit of Measure ID:
-                  <input
-                    type="number"
-                    value={ingredient.uom_id}
-                    onChange={(e) =>
+                  <SearchableDropdown
+                    options={uoms}
+                    label="name"
+                    id="id"
+                    selectedVal={ingredient.uom_id}
+                    handleChange={(value) =>
                       handleIngredientChange(
                         sectionIndex,
                         ingredientIndex,
                         "uom_id",
-                        e.target.value
+                        value
                       )
                     }
                   />

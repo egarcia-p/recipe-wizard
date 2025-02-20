@@ -1,5 +1,17 @@
-import { fetchCookbooks } from "@/app/lib/data";
-import { Cookbook } from "../../../types/types";
+import {
+  fetchCategories,
+  fetchCookbooks,
+  fetchIngredients,
+  fetchSubcategories,
+  fetchUoms,
+} from "@/app/lib/data";
+import {
+  Category,
+  Cookbook,
+  Ingredient,
+  Subcategory,
+  Uom,
+} from "../../../types/types";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import Form from "@/app/ui/recipe/create-form";
 import { Metadata } from "next";
@@ -8,7 +20,21 @@ export const metadata: Metadata = {
   title: "Create Recipe",
 };
 
-export const getCookbooks = async () => {
+export interface FormDataSuccess {
+  cookbooks: Cookbook[];
+  categories: Category[];
+  subcategories: Subcategory[];
+  ingredients: Ingredient[];
+  uoms: Uom[];
+}
+
+export interface FormDataError {
+  error: string;
+}
+
+export type FormDataResult = FormDataSuccess | FormDataError;
+
+export const getFormData = async (): Promise<FormDataResult> => {
   try {
     const { accessToken } = await getAccessToken();
 
@@ -16,16 +42,40 @@ export const getCookbooks = async () => {
       throw new Error("Failed to get access token.");
     }
 
-    const cookbooks = await fetchCookbooks(accessToken);
+    const cookbooks: Cookbook[] = await fetchCookbooks(accessToken);
 
     if (!cookbooks || cookbooks.length === 0) {
       throw new Error("Failed to fetch cookbooks.");
     }
 
-    return cookbooks;
+    const categories: Category[] = await fetchCategories(accessToken);
+
+    if (!categories || categories.length === 0) {
+      throw new Error("Failed to fetch categories.");
+    }
+
+    const subcategories: Subcategory[] = await fetchSubcategories(accessToken);
+
+    if (!subcategories || subcategories.length === 0) {
+      throw new Error("Failed to fetch subcategories.");
+    }
+
+    const ingredients: Ingredient[] = await fetchIngredients(accessToken);
+
+    if (!ingredients || ingredients.length === 0) {
+      throw new Error("Failed to fetch ingredients.");
+    }
+
+    const uoms: Uom[] = await fetchUoms(accessToken);
+
+    if (!uoms || uoms.length === 0) {
+      throw new Error("Failed to fetch uoms.");
+    }
+
+    return { cookbooks, categories, subcategories, ingredients, uoms };
   } catch (error) {
     console.error("Error fetching data:", error);
-    return [];
+    return { error: "Error fetching data" };
   }
 };
 
@@ -34,16 +84,26 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  //const cookbooks: Cookbook[] = await getCookbooks();
-  console.log(searchParams);
+  const formDataResult = await getFormData();
 
-  const cookbooks = { "1": "Cookbook 1", "2": "Cookbook 2" };
-  const categories = { "1": "Category 1", "2": "Category 2" };
+  //TODO add better error handling
+  if ("error" in formDataResult) {
+    return <div>Error: {formDataResult.error}</div>;
+  }
+
+  const { cookbooks, categories, subcategories, ingredients, uoms } =
+    formDataResult;
 
   return (
     <main>
       <h1 className="text-lg">Create Recipe</h1>
-      <Form cookbooks={cookbooks} categories={categories} />
+      <Form
+        cookbooks={cookbooks}
+        categories={categories}
+        subcategories={subcategories}
+        ingredients={ingredients}
+        uoms={uoms}
+      />
     </main>
   );
 }
