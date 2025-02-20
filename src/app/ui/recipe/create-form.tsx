@@ -9,7 +9,7 @@ import {
   Uom,
 } from "@/app/types/types";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { Button } from "../button";
 import { CreateSectionComponent } from "./create-section";
 
@@ -113,7 +113,9 @@ export default function Form({
 
     console.log(sections);
     // Send formData to the server
-    createRecipe(state, formData);
+    startTransition(async () => {
+      await dispatch(formData);
+    });
   };
 
   return (

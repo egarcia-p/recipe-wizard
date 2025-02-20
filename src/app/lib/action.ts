@@ -109,7 +109,7 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
       errors: {
         sections: validatedSections.error.flatten().fieldErrors,
       },
-      message: "Error in Sections. Failed to Create Recipe.",
+      message: "Missing Fields. Failed to Create Recipe.",
     };
   }
   const validatedFields = CreateRecipe.safeParse({
@@ -169,7 +169,26 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
     });
 
     const result = await response.json();
-    return result;
+
+    switch (response.status) {
+      case 200:
+        return result;
+      case 422:
+        return {
+          errors: result.errors || [],
+          message: "Server validation failed.",
+        };
+      case 500:
+        return {
+          errors: [],
+          message: "Internal server error.",
+        };
+      default:
+        return {
+          errors: [],
+          message: `An unexpected error occurred. Status code: ${response.status}`,
+        };
+    }
   } catch (error) {
     console.error("Error creating recipe:", error);
     return {
