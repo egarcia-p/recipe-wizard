@@ -50,7 +50,7 @@ const SearchableDropdown = ({
       <div className="control">
         <div className="line-">
           <input
-            className="leading-normal text-base bg-white border box-border cursor-default transition-all duration-200 ease-[ease] w-full pl-2.5 pr-[52px] py-2 rounded-sm border-solid border-[#ccc]"
+            className="h-10 leading-normal text-sm pl-10  bg-white border box-border cursor-default transition-all duration-200 ease-[ease] w-full pr-[52px] py-2 rounded-md border-solid border-[#ccc]"
             ref={inputRef}
             type="text"
             value={getDisplayValue()}
@@ -78,7 +78,7 @@ const SearchableDropdown = ({
           return (
             <div
               onClick={() => selectOption(option)}
-              className={`box-border cursor-pointer block px-2.5 py-2 ${
+              className={`box-border cursor-pointer block px-2.5 py-2 pl-10 ${
                 option[label] === selectedVal ? "bg-[#f2f9fc] " : ""
               }`}
               key={`${id}-${index}`}
