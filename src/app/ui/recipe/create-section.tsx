@@ -97,7 +97,7 @@ export function CreateSectionComponent({
             </div>
           </div>
 
-          <div className="flex flex-row gap-4">
+          <div className="mt-4 flex flex-row gap-4">
             <div className="w-1/2">
               <h4 className="text-lg">Ingredients</h4>
               <Button
@@ -108,7 +108,10 @@ export function CreateSectionComponent({
               </Button>
               {section.recipe_ingredients_attributes.map(
                 (ingredient, ingredientIndex) => (
-                  <div key={ingredientIndex} className="flex flex-wrap gap-4">
+                  <div
+                    key={ingredientIndex}
+                    className="py-2 flex flex-wrap gap-4"
+                  >
                     <div className="mb-4 w-12">
                       <label
                         htmlFor="name"
@@ -197,7 +200,7 @@ export function CreateSectionComponent({
                 Add step
               </Button>
               {section.steps_attributes.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex flex-wrap gap-4">
+                <div key={stepIndex} className="py-2 flex flex-wrap gap-4">
                   <div className="mb-4 w-12">
                     <label
                       htmlFor="number"
