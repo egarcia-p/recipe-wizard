@@ -12,6 +12,7 @@ import Link from "next/link";
 import { startTransition, useActionState, useState } from "react";
 import { Button } from "../button";
 import { CreateSectionComponent } from "./create-section";
+import { ErrorMessage } from "../error-message";
 
 export default function Form({
   cookbooks,
@@ -120,9 +121,7 @@ export default function Form({
 
   return (
     <>
-      <div id="message-error">
-        {state.message && <p className="mt-2 text-red-500"> {state.message}</p>}
-      </div>
+      {state.message && <ErrorMessage> {state.message}</ErrorMessage>}
       <form onSubmit={handleSubmit}>
         <div className="flex flex-row w-full">
           <div className="flex flex-col w-1/2 mx-auto p-4">
