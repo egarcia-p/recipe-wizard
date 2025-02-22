@@ -1,6 +1,8 @@
 import type { Recipe } from "@/app/types/types";
 import { SectionSteps } from "./section-steps";
 import { SectionIngredients } from "./section-ingredients";
+import Link from "next/link";
+import { Button } from "../button";
 
 export function RecipeComponent({ recipe }: { recipe: Recipe }) {
   return (
@@ -10,6 +12,11 @@ export function RecipeComponent({ recipe }: { recipe: Recipe }) {
         <h1 className="m-2 text-lg md:text-2xl font-medium">
           {recipe.subtitle}
         </h1>
+        <div className="">
+          <Link className="" href={`/dashboard/recipe/${recipe.id}/edit`}>
+            <Button>Edit Recipe</Button>
+          </Link>
+        </div>
       </div>
       <div className="flex flex-row w-full justify-left">
         <div>

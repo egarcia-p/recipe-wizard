@@ -9,7 +9,23 @@ export interface Recipe {
   updated_at: string;
   category_id: number;
   subcategory_id: number;
+  cookbook_id: number;
   sections: Section[];
+}
+
+export interface RecipeForm {
+  id: number;
+  title: string;
+  subtitle: string | null;
+  author: string;
+  servings: number;
+  total_time: number;
+  created_at: string;
+  updated_at: string;
+  category_id: number;
+  subcategory_id: number;
+  cookbook_id: number;
+  sections: SectionForm[];
 }
 
 export interface Section {
