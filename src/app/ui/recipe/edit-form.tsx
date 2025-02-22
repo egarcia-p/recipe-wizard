@@ -1,6 +1,6 @@
 "use client";
 
-import { createRecipe } from "@/app/lib/action";
+import { updateRecipe } from "@/app/lib/action";
 import {
   Category,
   Cookbook,
@@ -56,7 +56,7 @@ export default function Form({
   uoms: Uom[];
 }) {
   const initialState = { message: "", errors: {} };
-  const [state, dispatch] = useActionState(createRecipe, initialState);
+  const [state, dispatch] = useActionState(updateRecipe, initialState);
 
   const recipeForm: RecipeForm = transformRecipeToForm(recipe);
   const [sections, setSections] = useState(recipeForm.sections);

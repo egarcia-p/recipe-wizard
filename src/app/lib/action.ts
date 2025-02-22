@@ -56,7 +56,7 @@ const CreateRecipe = RecipeFormSchema.omit({ id: true });
 
 const SectionsFormSchema = z.array(SectionSchema);
 
-//const UpdateRecipe = RecipeFormSchema.omit({ id: true });
+const UpdateRecipe = RecipeFormSchema.omit({ id: true });
 
 export type RecipeState = {
   errors?: {
@@ -194,6 +194,105 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
     return {
       errors: prevState.errors,
       message: "Failed to create recipe.",
+    };
+  }
+}
+
+export async function updateRecipe(prevState: RecipeState, formData: FormData) {
+  const sectionsForm = JSON.parse(formData.get("sections") as string);
+
+  const validatedSections = SectionsFormSchema.safeParse(sectionsForm);
+
+  if (!validatedSections.success) {
+    return {
+      errors: {
+        sections: validatedSections.error.flatten().fieldErrors,
+      },
+      message: "Missing Fields. Failed to Edit Recipe.",
+    };
+  }
+  const validatedFields = CreateRecipe.safeParse({
+    title: formData.get("title"),
+    subtitle: formData.get("subtitle"),
+    author: formData.get("author"),
+    servings: formData.get("servings"),
+    total_time: formData.get("total_time"),
+    category_id: formData.get("category_id"),
+    subcategory_id: formData.get("subcategory_id"),
+    sections: sectionsForm,
+    cookbook_id: formData.get("cookbook_id"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Edit Recipe.",
+    };
+  }
+
+  const {
+    title,
+    subtitle,
+    author,
+    servings,
+    total_time,
+    category_id,
+    subcategory_id,
+    sections,
+    cookbook_id,
+  } = validatedFields.data;
+
+  try {
+    const recipe = {
+      title: title,
+      subtitle: subtitle,
+      author: author,
+      servings: servings,
+      total_time: total_time,
+      category_id: category_id,
+      subcategory_id: subcategory_id,
+      sections_attributes: sections,
+      cookbook_id: cookbook_id,
+    };
+
+    const { accessToken } = await getAccessToken();
+
+    // Call API to edit recipe
+    const response = await fetch(SERVER_URL + "/api/v1/recipes/edit", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(recipe),
+    });
+
+    const result = await response.json();
+
+    switch (response.status) {
+      case 200:
+        return result;
+      case 422:
+        return {
+          errors: result.errors || [],
+          message: "Server validation failed.",
+        };
+      case 500:
+        return {
+          errors: [],
+          message: "Internal server error.",
+        };
+      default:
+        return {
+          errors: [],
+          message: `An unexpected error occurred. Status code: ${response.status}`,
+        };
+    }
+  } catch (error) {
+    console.error("Error editing recipe:", error);
+    return {
+      errors: prevState.errors,
+      message: "Failed to edit recipe.",
     };
   }
 }
