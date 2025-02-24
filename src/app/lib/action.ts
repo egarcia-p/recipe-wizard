@@ -56,7 +56,7 @@ const CreateRecipe = RecipeFormSchema.omit({ id: true });
 
 const SectionsFormSchema = z.array(SectionSchema);
 
-const UpdateRecipe = RecipeFormSchema.omit({ id: true });
+const UpdateRecipe = RecipeFormSchema;
 
 export type RecipeState = {
   errors?: {
@@ -208,10 +208,12 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
       errors: {
         sections: validatedSections.error.flatten().fieldErrors,
       },
-      message: "Missing Fields. Failed to Edit Recipe.",
+      message: "Missing Section Fields. Failed to Edit Recipe.",
     };
   }
-  const validatedFields = CreateRecipe.safeParse({
+
+  const validatedFields = UpdateRecipe.safeParse({
+    id: formData.get("id"),
     title: formData.get("title"),
     subtitle: formData.get("subtitle"),
     author: formData.get("author"),
@@ -224,6 +226,7 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
   });
 
   if (!validatedFields.success) {
+    console.log(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Missing Fields. Failed to Edit Recipe.",
@@ -231,6 +234,7 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
   }
 
   const {
+    id,
     title,
     subtitle,
     author,
@@ -244,6 +248,7 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
 
   try {
     const recipe = {
+      id: id,
       title: title,
       subtitle: subtitle,
       author: author,
@@ -258,14 +263,17 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
     const { accessToken } = await getAccessToken();
 
     // Call API to edit recipe
-    const response = await fetch(SERVER_URL + "/api/v1/recipes/edit", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(recipe),
-    });
+    const response = await fetch(
+      SERVER_URL + "/api/v1/recipes/edit/" + recipe.id,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(recipe),
+      }
+    );
 
     const result = await response.json();
 

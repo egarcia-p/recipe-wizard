@@ -122,6 +122,7 @@ export default function Form({
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
+    formData.append("id", event.target.id.value);
     formData.append("title", event.target.title.value);
     formData.append("subtitle", event.target.subtitle.value);
     formData.append("author", event.target.author.value);
@@ -143,6 +144,7 @@ export default function Form({
     <>
       {state.message && <ErrorMessage> {state.message}</ErrorMessage>}
       <form onSubmit={handleSubmit}>
+        <input id="id" name="id" type="hidden" value={recipe.id} />
         <div className="flex flex-row w-full">
           <div className="flex flex-col w-1/2 mx-auto p-4">
             <div className="flex flex-row w-full justify-between gap-4">
@@ -487,7 +489,7 @@ export default function Form({
           >
             Cancel
           </Link>
-          <Button type="submit">Create Recipe</Button>
+          <Button type="submit">Edit Recipe</Button>
         </div>
       </form>
     </>
