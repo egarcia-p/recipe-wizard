@@ -1,6 +1,6 @@
 // import { auth } from "@/auth";
 import { Metadata } from "next";
-import ProfileClient from "../ui/profile/user";
+import ProfileClient from "../../ui/profile/user";
 import { getSession } from "@auth0/nextjs-auth0";
 
 export const metadata: Metadata = {
