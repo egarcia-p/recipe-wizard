@@ -3,6 +3,7 @@ import { SectionSteps } from "./section-steps";
 import { SectionIngredients } from "./section-ingredients";
 import Link from "next/link";
 import { Button } from "../button";
+import { DeleteRecipe } from "./buttons";
 
 export function RecipeComponent({ recipe }: { recipe: Recipe }) {
   return (
@@ -16,6 +17,9 @@ export function RecipeComponent({ recipe }: { recipe: Recipe }) {
           <Link className="" href={`/dashboard/recipe/${recipe.id}/edit`}>
             <Button>Edit Recipe</Button>
           </Link>
+        </div>
+        <div className="">
+          <DeleteRecipe id={recipe.id} />
         </div>
       </div>
       <div className="flex flex-row w-full justify-left">

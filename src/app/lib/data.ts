@@ -1,7 +1,6 @@
 const SERVER_URL = process.env.API_SERVER_URL;
 
 export async function fetchAllRecipes(accessToken: string) {
-  console.log("accessToken", accessToken);
   const response = await fetch(SERVER_URL + "/api/v1/recipes/index", {
     method: "GET",
     headers: {
@@ -14,7 +13,6 @@ export async function fetchAllRecipes(accessToken: string) {
 }
 
 export async function fetchRecipesByUSer(accessToken: string) {
-  console.log("accessToken", accessToken);
   const response = await fetch(SERVER_URL + "/api/v1/recipes/recipes_by_user", {
     method: "GET",
     headers: {

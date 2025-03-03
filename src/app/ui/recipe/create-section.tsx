@@ -59,6 +59,9 @@ export function CreateSectionComponent({
           key={sectionIndex}
           className="mt-4 rounded-md bg-primary-50 mx-auto p-4"
         >
+          {section.id && (
+            <input id="id" name="id" type="hidden" value={section.id} />
+          )}
           <h3 className="text-lg bold">Section {sectionIndex + 1}</h3>
           <div className="flex flex-row w-full gap-4">
             <div className="w-12">
@@ -96,7 +99,6 @@ export function CreateSectionComponent({
               </div>
             </div>
           </div>
-
           <div className="mt-4 flex flex-row gap-4">
             <div className="w-1/2">
               <h4 className="text-lg">Ingredients</h4>
@@ -112,6 +114,14 @@ export function CreateSectionComponent({
                     key={ingredientIndex}
                     className="py-2 flex flex-wrap gap-4"
                   >
+                    {ingredient.id && (
+                      <input
+                        id="id"
+                        name="id"
+                        type="hidden"
+                        value={ingredient.id}
+                      />
+                    )}
                     <div className="mb-4 w-12">
                       <label
                         htmlFor="name"
@@ -163,7 +173,6 @@ export function CreateSectionComponent({
                         </div>
                       </div>
                     </div>
-
                     <div className="mb-4">
                       <label
                         htmlFor="name"
@@ -201,6 +210,9 @@ export function CreateSectionComponent({
               </Button>
               {section.steps_attributes.map((step, stepIndex) => (
                 <div key={stepIndex} className="py-2 flex flex-wrap gap-4">
+                  {step.id && (
+                    <input id="id" name="id" type="hidden" value={step.id} />
+                  )}
                   <div className="mb-4 w-12">
                     <label
                       htmlFor="number"

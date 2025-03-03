@@ -8,7 +8,6 @@ import { redirect } from "next/navigation";
 const SERVER_URL = process.env.API_SERVER_URL;
 
 const SectionSchema = z.object({
-  //id: z.number().nullable(),
   name: z.string().nonempty(),
   //recipe_id: z.number().nullable(),
   sort_number: z.coerce
@@ -16,7 +15,6 @@ const SectionSchema = z.object({
     .gt(0, { message: "Sort Number must be greater than 0" }),
   steps_attributes: z.array(
     z.object({
-      //id: z.number().nullable(),
       description: z.string().nonempty(),
       step_number: z.coerce
         .number()
@@ -26,9 +24,42 @@ const SectionSchema = z.object({
   ),
   recipe_ingredients_attributes: z.array(
     z.object({
-      //id: z.number().nullable(),
+      ingredient_id: z.coerce
+        .number()
+        .gt(0, { message: "Ingredient must be greater than 0" }),
+      quantity: z.coerce
+        .number()
+        .gt(0, { message: "Quantity must be greater than 0" }),
+      uom_id: z.coerce
+        .number()
+        .gt(0, { message: "UOM must be greater than 0" }),
+      //section_id: z.number().nullable(),
+    })
+  ),
+});
+
+const SectionSchemaUpdate = z.object({
+  id: z.coerce.number(),
+  name: z.string().nonempty(),
+  //recipe_id: z.number().nullable(),
+  sort_number: z.coerce
+    .number()
+    .gt(0, { message: "Sort Number must be greater than 0" }),
+  steps_attributes: z.array(
+    z.object({
+      id: z.coerce.number(),
+      description: z.string().nonempty(),
+      step_number: z.coerce
+        .number()
+        .gt(0, { message: "Step must be greater than 0" }),
+      //section_id: z.number().nullable(),
+    })
+  ),
+  recipe_ingredients_attributes: z.array(
+    z.object({
+      id: z.coerce.number(),
       ingredient_id: z.coerce.number(),
-      quantity: z.number(),
+      quantity: z.coerce.number(),
       uom_id: z.coerce.number(),
       //section_id: z.number().nullable(),
     })
@@ -52,11 +83,30 @@ const RecipeFormSchema = z.object({
   sections: z.array(SectionSchema),
 });
 
+const RecipeFormSchemaUpdate = z.object({
+  id: z.string(),
+  title: z.string().nonempty(),
+  subtitle: z.string().nullable(),
+  author: z.string().nonempty(),
+  servings: z.coerce
+    .number()
+    .gt(0, { message: "Servings must be greater than 0" }),
+  total_time: z.coerce
+    .number()
+    .gt(0, { message: "Total time must be greater than 0" }),
+  category_id: z.coerce.number(),
+  subcategory_id: z.coerce.number(),
+  cookbook_id: z.coerce.number().nullable(),
+  sections: z.array(SectionSchemaUpdate),
+});
+
 const CreateRecipe = RecipeFormSchema.omit({ id: true });
 
 const SectionsFormSchema = z.array(SectionSchema);
 
-const UpdateRecipe = RecipeFormSchema;
+const UpdateRecipe = RecipeFormSchemaUpdate;
+
+const UpdateSectionsFormSchema = z.array(SectionSchemaUpdate);
 
 export type RecipeState = {
   errors?: {
@@ -100,6 +150,7 @@ export type CookbookState = {
 };
 
 export async function createRecipe(prevState: RecipeState, formData: FormData) {
+  let recipeId = 0;
   const sectionsForm = JSON.parse(formData.get("sections") as string);
 
   const validatedSections = SectionsFormSchema.safeParse(sectionsForm);
@@ -109,7 +160,7 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
       errors: {
         sections: validatedSections.error.flatten().fieldErrors,
       },
-      message: "Missing Fields. Failed to Create Recipe.",
+      message: "Missing Section Fields. Failed to Edit Recipe.",
     };
   }
   const validatedFields = CreateRecipe.safeParse({
@@ -172,7 +223,8 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
 
     switch (response.status) {
       case 200:
-        return result;
+        recipeId = result.id;
+        break;
       case 422:
         return {
           errors: result.errors || [],
@@ -196,12 +248,17 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
       message: "Failed to create recipe.",
     };
   }
+
+  revalidatePath("/dashboard/recipe/" + recipeId);
+  redirect("/dashboard/recipe/" + recipeId);
 }
 
 export async function updateRecipe(prevState: RecipeState, formData: FormData) {
+  const recipeId = formData.get("recipe_id");
+
   const sectionsForm = JSON.parse(formData.get("sections") as string);
 
-  const validatedSections = SectionsFormSchema.safeParse(sectionsForm);
+  const validatedSections = UpdateSectionsFormSchema.safeParse(sectionsForm);
 
   if (!validatedSections.success) {
     return {
@@ -213,7 +270,7 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
   }
 
   const validatedFields = UpdateRecipe.safeParse({
-    id: formData.get("id"),
+    id: formData.get("recipe_id"),
     title: formData.get("title"),
     subtitle: formData.get("subtitle"),
     author: formData.get("author"),
@@ -226,7 +283,6 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
   });
 
   if (!validatedFields.success) {
-    console.log(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Missing Fields. Failed to Edit Recipe.",
@@ -266,7 +322,7 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
     const response = await fetch(
       SERVER_URL + "/api/v1/recipes/edit/" + recipe.id,
       {
-        method: "POST",
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -274,6 +330,52 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
         body: JSON.stringify(recipe),
       }
     );
+
+    const result = await response.json();
+
+    switch (response.status) {
+      case 200:
+        break;
+      case 422:
+        return {
+          errors: result.errors || [],
+          message: "Server validation failed.",
+        };
+      case 500:
+        return {
+          errors: [],
+          message: "Internal server error.",
+        };
+      default:
+        return {
+          errors: [],
+          message: `An unexpected error occurred. Status code: ${response.status}`,
+        };
+    }
+  } catch (error) {
+    console.error("Error editing recipe:", error);
+    return {
+      errors: prevState.errors,
+      message: "Failed to edit recipe.",
+    };
+  }
+
+  revalidatePath("/dashboard/recipe/" + recipeId);
+  redirect("/dashboard/recipe/" + recipeId);
+}
+
+export async function deleteRecipe(id: number) {
+  try {
+    const { accessToken } = await getAccessToken();
+
+    // Call API to edit recipe
+    const response = await fetch(SERVER_URL + "/api/v1/recipes/destroy/" + id, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     const result = await response.json();
 
@@ -297,10 +399,9 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
         };
     }
   } catch (error) {
-    console.error("Error editing recipe:", error);
+    console.error("Error deleting recipe:", error);
     return {
-      errors: prevState.errors,
-      message: "Failed to edit recipe.",
+      message: "Failed to delete recipe.",
     };
   }
 }

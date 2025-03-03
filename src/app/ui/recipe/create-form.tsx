@@ -112,7 +112,6 @@ export default function Form({
     formData.append("cookbook_id", event.target.cookbook_id.value);
     formData.append("sections", JSON.stringify(sections));
 
-    console.log(sections);
     // Send formData to the server
     startTransition(async () => {
       await dispatch(formData);

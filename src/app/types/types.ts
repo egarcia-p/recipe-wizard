@@ -40,6 +40,7 @@ export interface Section {
 }
 
 export interface SectionForm {
+  id?: string; // optional
   name: string;
   sort_number: number;
   steps_attributes: StepForm[];
@@ -55,6 +56,7 @@ export interface Step {
 }
 
 export interface StepForm {
+  id?: string; // optional
   description: string;
   step_number: number;
 }
@@ -74,6 +76,7 @@ export interface RecipeIngredient {
 }
 
 export interface RecipeIngredientForm {
+  id?: string; // optional
   ingredient_id: number;
   uom_id: number;
   quantity: number;
