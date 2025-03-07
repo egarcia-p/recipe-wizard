@@ -386,7 +386,7 @@ export async function deleteRecipe(id: number) {
 
     switch (response.status) {
       case 200:
-        return result;
+        break;
       case 403:
         return {
           errors: [],
@@ -414,6 +414,9 @@ export async function deleteRecipe(id: number) {
       message: "Failed to delete recipe.",
     };
   }
+
+  revalidatePath("/dashboard/cookbooks");
+  redirect("/dashboard/cookbooks");
 }
 
 export async function createCookbook(
