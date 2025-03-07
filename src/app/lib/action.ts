@@ -336,6 +336,11 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
     switch (response.status) {
       case 200:
         break;
+      case 403:
+        return {
+          errors: [],
+          message: "Unauthorized to edit recipe.",
+        };
       case 422:
         return {
           errors: result.errors || [],
@@ -382,6 +387,11 @@ export async function deleteRecipe(id: number) {
     switch (response.status) {
       case 200:
         return result;
+      case 403:
+        return {
+          errors: [],
+          message: "Unauthorized to delete recipe.",
+        };
       case 422:
         return {
           errors: result.errors || [],
