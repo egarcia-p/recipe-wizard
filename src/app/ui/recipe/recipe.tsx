@@ -1,11 +1,17 @@
-import type { Recipe } from "@/app/types/types";
+import type { Recipe, User } from "@/app/types/types";
 import { SectionSteps } from "./section-steps";
 import { SectionIngredients } from "./section-ingredients";
 import Link from "next/link";
 import { Button } from "../button";
 import { DeleteRecipe } from "./buttons";
 
-export function RecipeComponent({ recipe }: { recipe: Recipe }) {
+export function RecipeComponent({
+  recipe,
+  user,
+}: {
+  recipe: Recipe;
+  user: User;
+}) {
   return (
     <div className="w-full  p-2 shadow-sm">
       <div className="flex">
@@ -14,12 +20,14 @@ export function RecipeComponent({ recipe }: { recipe: Recipe }) {
           {recipe.subtitle}
         </h1>
         <div className="">
-          <Link className="" href={`/dashboard/recipe/${recipe.id}/edit`}>
-            <Button>Edit Recipe</Button>
-          </Link>
+          {recipe.user_id == user.id && (
+            <Link className="" href={`/dashboard/recipe/${recipe.id}/edit`}>
+              <Button>Edit Recipe</Button>
+            </Link>
+          )}
         </div>
         <div className="">
-          <DeleteRecipe id={recipe.id} />
+          {recipe.user_id == user.id && <DeleteRecipe id={recipe.id} />}
         </div>
       </div>
       <div className="flex flex-row w-full justify-left">
