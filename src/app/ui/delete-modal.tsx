@@ -16,7 +16,7 @@ export default function DeleteModal(props: Props) {
   return (
     <div>
       <IconButton
-        className="rounded-md border p-2 hover:bg-gray-100"
+        className="rounded-md h-10  bg-primary-900 px-4 text-sm font-medium text-primary-50   border p-2 hover:text-primary-900 hover:bg-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 active:bg-primary-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
         aria-label="delete"
         onClick={() => setConfirmOpen(true)}
       >

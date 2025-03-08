@@ -14,20 +14,26 @@ export function RecipeComponent({
 }) {
   return (
     <div className="w-full  p-2 shadow-sm">
-      <div className="flex">
-        <h1 className="m-2 text-xl md:text-4xl font-medium">{recipe.title}</h1>
-        <h1 className="m-2 text-lg md:text-2xl font-medium">
-          {recipe.subtitle}
-        </h1>
-        <div className="">
-          {recipe.user_id == user.id && (
-            <Link className="" href={`/dashboard/recipe/${recipe.id}/edit`}>
-              <Button>Edit Recipe</Button>
-            </Link>
-          )}
+      <div className="flex flex-row justify-between">
+        <div>
+          <h1 className="m-2 text-xl md:text-4xl font-medium">
+            {recipe.title}
+          </h1>
+          <h1 className="m-2 text-lg md:text-2xl font-medium">
+            {recipe.subtitle}
+          </h1>
         </div>
-        <div className="">
-          {recipe.user_id == user.id && <DeleteRecipe id={recipe.id} />}
+        <div className="flex flex-row gap-4">
+          <div className="">
+            {recipe.user_id == user.id && (
+              <Link className="" href={`/dashboard/recipe/${recipe.id}/edit`}>
+                <Button>Edit Recipe</Button>
+              </Link>
+            )}
+          </div>
+          <div className="">
+            {recipe.user_id == user.id && <DeleteRecipe id={recipe.id} />}
+          </div>
         </div>
       </div>
       <div className="flex flex-row w-full justify-left">
