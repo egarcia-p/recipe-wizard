@@ -12,6 +12,9 @@ export function RecipeComponent({
   recipe: Recipe;
   user: User;
 }) {
+  console.log(recipe.user_id);
+  console.log(user.id);
+
   return (
     <div className="w-full  p-2 shadow-sm">
       <div className="flex">
@@ -55,14 +58,20 @@ export function RecipeComponent({
         />
       </div>
       <div className="flex h-screen flex-col p-6 md:p-12 md:flex-row md:overflow-hidden">
-        <div className="w-full flex-none md:w-64">
+        <div className="w-full flex-none md:w-64 bg-primary-100 rounded-xl p-4 md:mr-4 md:overflow-y-auto">
+          <h2 className="m-2 text-xl md:text-4xl font-medium">Ingredients</h2>
           {recipe.sections &&
             recipe.sections.map((section) => (
               <SectionIngredients key={section.id} section={section} />
             ))}
         </div>
         <div className="flex-grow md:overflow-y-auto ">
-          <div>
+          <div className="w-full flex-none p-4">
+            <h2 className="m-2 text-xl md:text-4xl font-medium">
+              Instructions
+            </h2>
+          </div>
+          <div className="flex flex-col rounded-xl p-4 md:mr-4 md:overflow-y-auto gap-4">
             {recipe.sections &&
               recipe.sections.map((section) => (
                 <SectionSteps key={section.id} section={section} />
