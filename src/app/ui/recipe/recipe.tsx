@@ -12,9 +12,6 @@ export function RecipeComponent({
   recipe: Recipe;
   user: User;
 }) {
-  console.log(recipe.user_id);
-  console.log(user.id);
-
   return (
     <div className="w-full  p-2 shadow-sm">
       <div className="flex">
