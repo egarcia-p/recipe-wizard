@@ -11,6 +11,7 @@ export interface Recipe {
   subcategory_id: number;
   cookbook_id: number;
   sections: Section[];
+  user_id: number;
 }
 
 export interface RecipeForm {
@@ -110,4 +111,9 @@ export interface Uom {
   system: string;
   conversion: number;
   shortname: string;
+}
+
+export interface User {
+  id: number;
+  sub: string;
 }
