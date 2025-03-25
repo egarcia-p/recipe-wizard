@@ -147,6 +147,56 @@ export function CreateSectionComponent({
                         </div>
                       </div>
                     </div>
+                    <div className="mb-4 w-12">
+                      <label
+                        htmlFor="fdc_id"
+                        className="mb-2 block text-sm font-medium"
+                      >
+                        FDC_ID:
+                      </label>
+                      <div className="relative mt-2 rounded-md">
+                        <div className="relative h-10">
+                          <input
+                            type="text"
+                            value={ingredient.fdc_id}
+                            className="peer block w-full h-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
+                            onChange={(e) =>
+                              handleIngredientChange(
+                                sectionIndex,
+                                ingredientIndex,
+                                "fdc_id",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mb-4 w-12">
+                      <label
+                        htmlFor="name"
+                        className="mb-2 block text-sm font-medium"
+                      >
+                        Name:
+                      </label>
+                      <div className="relative mt-2 rounded-md">
+                        <div className="relative h-10">
+                          <input
+                            type="text"
+                            value={ingredient.name}
+                            className="peer block w-full h-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
+                            onChange={(e) =>
+                              handleIngredientChange(
+                                sectionIndex,
+                                ingredientIndex,
+                                "name",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
                     <div className="mb-4 grow">
                       <label
                         htmlFor="name"

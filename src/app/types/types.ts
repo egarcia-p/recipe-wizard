@@ -81,6 +81,8 @@ export interface RecipeIngredientForm {
   ingredient_id: number;
   uom_id: number;
   quantity: number;
+  fdc_id: number;
+  name: string;
 }
 
 export interface Cookbook {
@@ -102,6 +104,8 @@ export interface Subcategory {
 export interface Ingredient {
   id: number;
   name: string;
+  fdc_id: number;
+  description: string;
 }
 
 export interface Uom {

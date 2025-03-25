@@ -33,7 +33,10 @@ const SectionSchema = z.object({
       uom_id: z.coerce
         .number()
         .gt(0, { message: "UOM must be greater than 0" }),
-      //section_id: z.number().nullable(),
+      fdc_id: z.coerce
+        .number()
+        .gt(0, { message: "FDC_ID must be greater than 0" }),
+      name: z.string(),
     })
   ),
 });
@@ -52,7 +55,6 @@ const SectionSchemaUpdate = z.object({
       step_number: z.coerce
         .number()
         .gt(0, { message: "Step must be greater than 0" }),
-      //section_id: z.number().nullable(),
     })
   ),
   recipe_ingredients_attributes: z.array(
@@ -61,7 +63,10 @@ const SectionSchemaUpdate = z.object({
       ingredient_id: z.coerce.number(),
       quantity: z.coerce.number(),
       uom_id: z.coerce.number(),
-      //section_id: z.number().nullable(),
+      fdc_id: z.coerce
+        .number()
+        .gt(0, { message: "FDC_ID must be greater than 0" }),
+      name: z.string(),
     })
   ),
 });

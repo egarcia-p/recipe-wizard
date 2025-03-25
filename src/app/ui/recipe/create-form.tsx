@@ -36,7 +36,7 @@ export default function Form({
       sort_number: 1,
       steps_attributes: [{ description: "", step_number: 1 }],
       recipe_ingredients_attributes: [
-        { ingredient_id: 0, quantity: 1, uom_id: 0 },
+        { ingredient_id: 0, quantity: 1, uom_id: 0, fdc_id: 0, name: "" },
       ],
     },
   ]);
@@ -74,7 +74,7 @@ export default function Form({
         sort_number: sections.length + 1,
         steps_attributes: [{ description: "", step_number: 1 }],
         recipe_ingredients_attributes: [
-          { ingredient_id: 0, quantity: 1, uom_id: 0 },
+          { ingredient_id: 0, quantity: 1, uom_id: 0, fdc_id: 0, name: "" },
         ],
       },
     ]);
@@ -95,6 +95,8 @@ export default function Form({
       ingredient_id: 0,
       quantity: 1,
       uom_id: 0,
+      fdc_id: 0,
+      name: "",
     });
     setSections(newSections);
   };
@@ -399,13 +401,14 @@ export default function Form({
               <div className="relative mt-2 rounded-md">
                 <div className="relative h-10">
                   <select
+                    key="cookbook_id"
                     id="cookbook_id"
                     name="cookbook_id"
                     className="peer block w-full h-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                     defaultValue=""
                     aria-describedby="cookbook_id-error"
                   >
-                    <option value="" disabled>
+                    <option key={0} value="" disabled>
                       Select a cookbook
                     </option>
                     {Object.entries(cookbooks).map(
