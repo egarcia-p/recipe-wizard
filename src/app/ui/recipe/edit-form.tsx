@@ -37,8 +37,8 @@ const transformRecipeToForm = (recipe: Recipe): RecipeForm => {
           ingredient_id: ingredient.ingredient_id,
           uom_id: ingredient.uom_id,
           quantity: ingredient.quantity,
-          fdc_id: 0,
-          name: "",
+          fdc_id: ingredient.fdc_id,
+          name: ingredient.name,
         })
       ),
     })),

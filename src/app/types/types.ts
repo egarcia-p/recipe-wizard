@@ -66,6 +66,7 @@ export interface RecipeIngredient {
   id: number;
   recipe_id: number;
   ingredient_id: number;
+  fdc_id: number;
   name: string;
   uom_id: number;
   uom_name: string;

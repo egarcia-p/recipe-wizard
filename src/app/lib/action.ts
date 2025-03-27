@@ -56,8 +56,7 @@ const SectionSchemaUpdate = z.object({
   ),
   recipe_ingredients_attributes: z.array(
     z.object({
-      id: z.coerce.number(),
-      ingredient_id: z.coerce.number(),
+      id: z.coerce.number().optional(),
       quantity: z.coerce.number(),
       uom_id: z.coerce.number(),
       fdc_id: z.coerce
