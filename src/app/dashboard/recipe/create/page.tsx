@@ -24,7 +24,6 @@ export interface FormDataSuccess {
   cookbooks: Cookbook[];
   categories: Category[];
   subcategories: Subcategory[];
-  ingredients: Ingredient[];
   uoms: Uom[];
 }
 
@@ -60,19 +59,13 @@ export const getFormData = async (): Promise<FormDataResult> => {
       throw new Error("Failed to fetch subcategories.");
     }
 
-    const ingredients: Ingredient[] = await fetchIngredients(accessToken);
-
-    if (!ingredients || ingredients.length === 0) {
-      throw new Error("Failed to fetch ingredients.");
-    }
-
     const uoms: Uom[] = await fetchUoms(accessToken);
 
     if (!uoms || uoms.length === 0) {
       throw new Error("Failed to fetch uoms.");
     }
 
-    return { cookbooks, categories, subcategories, ingredients, uoms };
+    return { cookbooks, categories, subcategories, uoms };
   } catch (error) {
     console.error("Error fetching data:", error);
     return { error: "Error fetching data" };
