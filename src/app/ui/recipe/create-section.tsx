@@ -4,6 +4,7 @@ import { Ingredient, SectionForm, Uom } from "@/app/types/types";
 import { Button } from "../button";
 import SearchableDropdown from "../searchable-dropdown";
 import { useState } from "react";
+import { SearchIngredient } from "./buttons";
 type CallbackSectionFunction = (
   index: number,
   field: string,
@@ -114,6 +115,25 @@ export function CreateSectionComponent({
                     key={ingredientIndex}
                     className="py-2 flex flex-wrap gap-4"
                   >
+                    <SearchIngredient
+                      onConfirm={(ingredient: {
+                        fdcId: string;
+                        name: string;
+                      }) => {
+                        handleIngredientChange(
+                          sectionIndex,
+                          ingredientIndex,
+                          "fdc_id",
+                          ingredient.fdcId
+                        );
+                        handleIngredientChange(
+                          sectionIndex,
+                          ingredientIndex,
+                          "name",
+                          ingredient.name
+                        );
+                      }}
+                    />
                     {ingredient.id && (
                       <input
                         id="id"
@@ -147,32 +167,33 @@ export function CreateSectionComponent({
                         </div>
                       </div>
                     </div>
-                    <div className="mb-4 grow">
+                    <div className="mb-4 w-12">
+                      <label
+                        htmlFor="fdc_id"
+                        className="mb-2 block text-sm font-medium"
+                      >
+                        FDC_ID:
+                      </label>
+                      <div className="relative mt-2 rounded-md">
+                        <div className="flex relative h-10">
+                          <div className="my-auto">{ingredient.fdc_id}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mb-4 w-12">
                       <label
                         htmlFor="name"
                         className="mb-2 block text-sm font-medium"
                       >
-                        Ingredient:
+                        Name:
                       </label>
                       <div className="relative mt-2 rounded-md">
-                        <div className="relative h-10">
-                          <SearchableDropdown
-                            options={ingredients}
-                            label="name"
-                            id="id"
-                            selectedVal={ingredient.ingredient_id}
-                            handleChange={(value) =>
-                              handleIngredientChange(
-                                sectionIndex,
-                                ingredientIndex,
-                                "ingredient_id",
-                                value
-                              )
-                            }
-                          />
+                        <div className="flex relative h-10">
+                          <div className="my-auto">{ingredient.name}</div>
                         </div>
                       </div>
                     </div>
+
                     <div className="mb-4">
                       <label
                         htmlFor="name"

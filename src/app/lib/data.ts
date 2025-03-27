@@ -1,4 +1,8 @@
+"use server";
+
 const SERVER_URL = process.env.API_SERVER_URL;
+const USDA_API_KEY = process.env.USDA_API_KEY;
+const USDA_API = process.env.USDA_API;
 
 export async function fetchAllRecipes(accessToken: string) {
   const response = await fetch(SERVER_URL + "/api/v1/recipes/index", {
@@ -119,6 +123,21 @@ export async function fetchUser(accessToken: string) {
       "Content-Type": "application/json",
     },
   });
+  const result = await response.json();
+  return result;
+}
+
+export async function searchUSDAIngredients(query: string) {
+  const response = await fetch(
+    USDA_API +
+      `/foods/search?query=description=${query}&dataType=Foundation&pageSize=25&sortBy=fdcId&sortOrder=asc&api_key=${USDA_API_KEY}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   const result = await response.json();
   return result;
 }

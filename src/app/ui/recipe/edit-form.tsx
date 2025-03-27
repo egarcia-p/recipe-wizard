@@ -37,6 +37,8 @@ const transformRecipeToForm = (recipe: Recipe): RecipeForm => {
           ingredient_id: ingredient.ingredient_id,
           uom_id: ingredient.uom_id,
           quantity: ingredient.quantity,
+          fdc_id: ingredient.fdc_id,
+          name: ingredient.name,
         })
       ),
     })),
@@ -97,7 +99,7 @@ export default function Form({
         sort_number: sections.length + 1,
         steps_attributes: [{ description: "", step_number: 1 }],
         recipe_ingredients_attributes: [
-          { ingredient_id: 0, quantity: 1, uom_id: 0 },
+          { ingredient_id: 0, quantity: 1, uom_id: 0, fdc_id: 0, name: "" },
         ],
       },
     ]);
@@ -118,6 +120,8 @@ export default function Form({
       ingredient_id: 0,
       quantity: 1,
       uom_id: 0,
+      fdc_id: 0,
+      name: "",
     });
     setSections(newSections);
   };
