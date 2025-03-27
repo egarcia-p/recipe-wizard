@@ -4,6 +4,7 @@ import { Ingredient, SectionForm, Uom } from "@/app/types/types";
 import { Button } from "../button";
 import SearchableDropdown from "../searchable-dropdown";
 import { useState } from "react";
+import { SearchIngredient } from "./buttons";
 type CallbackSectionFunction = (
   index: number,
   field: string,
@@ -114,6 +115,25 @@ export function CreateSectionComponent({
                     key={ingredientIndex}
                     className="py-2 flex flex-wrap gap-4"
                   >
+                    <SearchIngredient
+                      onConfirm={(ingredient: {
+                        fdcId: string;
+                        name: string;
+                      }) => {
+                        handleIngredientChange(
+                          sectionIndex,
+                          ingredientIndex,
+                          "fdc_id",
+                          ingredient.fdcId
+                        );
+                        handleIngredientChange(
+                          sectionIndex,
+                          ingredientIndex,
+                          "name",
+                          ingredient.name
+                        );
+                      }}
+                    />
                     {ingredient.id && (
                       <input
                         id="id"
@@ -155,20 +175,8 @@ export function CreateSectionComponent({
                         FDC_ID:
                       </label>
                       <div className="relative mt-2 rounded-md">
-                        <div className="relative h-10">
-                          <input
-                            type="text"
-                            value={ingredient.fdc_id}
-                            className="peer block w-full h-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
-                            onChange={(e) =>
-                              handleIngredientChange(
-                                sectionIndex,
-                                ingredientIndex,
-                                "fdc_id",
-                                e.target.value
-                              )
-                            }
-                          />
+                        <div className="flex relative h-10">
+                          <div className="my-auto">{ingredient.fdc_id}</div>
                         </div>
                       </div>
                     </div>
@@ -180,49 +188,12 @@ export function CreateSectionComponent({
                         Name:
                       </label>
                       <div className="relative mt-2 rounded-md">
-                        <div className="relative h-10">
-                          <input
-                            type="text"
-                            value={ingredient.name}
-                            className="peer block w-full h-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
-                            onChange={(e) =>
-                              handleIngredientChange(
-                                sectionIndex,
-                                ingredientIndex,
-                                "name",
-                                e.target.value
-                              )
-                            }
-                          />
+                        <div className="flex relative h-10">
+                          <div className="my-auto">{ingredient.name}</div>
                         </div>
                       </div>
                     </div>
-                    <div className="mb-4 grow">
-                      <label
-                        htmlFor="name"
-                        className="mb-2 block text-sm font-medium"
-                      >
-                        Ingredient:
-                      </label>
-                      <div className="relative mt-2 rounded-md">
-                        <div className="relative h-10">
-                          <SearchableDropdown
-                            options={ingredients}
-                            label="name"
-                            id="id"
-                            selectedVal={ingredient.ingredient_id}
-                            handleChange={(value) =>
-                              handleIngredientChange(
-                                sectionIndex,
-                                ingredientIndex,
-                                "ingredient_id",
-                                value
-                              )
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
+
                     <div className="mb-4">
                       <label
                         htmlFor="name"

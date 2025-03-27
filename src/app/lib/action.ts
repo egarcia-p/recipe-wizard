@@ -24,9 +24,6 @@ const SectionSchema = z.object({
   ),
   recipe_ingredients_attributes: z.array(
     z.object({
-      ingredient_id: z.coerce
-        .number()
-        .gt(0, { message: "Ingredient must be greater than 0" }),
       quantity: z.coerce
         .number()
         .gt(0, { message: "Quantity must be greater than 0" }),
