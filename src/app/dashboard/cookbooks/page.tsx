@@ -23,6 +23,10 @@ export const getCookbooks = async () => {
       throw new Error("Failed to fetch cookbooks.");
     }
 
+    if (cookbooks.error) {
+      throw new Error(cookbooks.error_description);
+    }
+
     return cookbooks;
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -40,13 +44,15 @@ export default async function Page() {
       <div className="flex flex-row flex-wrap gap-4 justify-start content-start w-full">
         <CreateCard name="Create Cookbook" url="/dashboard/cookbook/create" />
         <CookbookCard key={"All"} name="All" id={-1} />
-        {cookbooks.map((cookbook) => (
-          <CookbookCard
-            key={cookbook.id}
-            name={cookbook.name}
-            id={cookbook.id}
-          />
-        ))}
+
+        {cookbooks &&
+          cookbooks.map((cookbook) => (
+            <CookbookCard
+              key={cookbook.id}
+              name={cookbook.name}
+              id={cookbook.id}
+            />
+          ))}
       </div>
     </main>
   );
