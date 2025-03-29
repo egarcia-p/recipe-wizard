@@ -1,15 +1,17 @@
 "use client";
 
+import { CheckCircleIcon, HomeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: "Home", href: "/dashboard/cookbooks" },
+  { name: "Home", href: "/dashboard/cookbooks", icon: HomeIcon },
   {
     name: "Profile",
     href: "/dashboard/profile",
+    icon: CheckCircleIcon,
   },
 ];
 
@@ -18,7 +20,7 @@ export default function NavLinks() {
   return (
     <>
       {links.map((link) => {
-        // const LinkIcon = link.icon;
+        const LinkIcon = link.icon;
         return (
           <Link
             key={link.name}
@@ -28,7 +30,7 @@ export default function NavLinks() {
             ${pathname === link.href ? "bg-primary-200 text-primary-950" : ""}
             `}
           >
-            {/* <LinkIcon className="w-6" /> */}
+            <LinkIcon className="w-6" />
             <span className="hidden md:block">{link.name}</span>
           </Link>
         );
