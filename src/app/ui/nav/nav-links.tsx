@@ -1,6 +1,10 @@
 "use client";
 
-import { CheckCircleIcon, HomeIcon } from "@heroicons/react/24/outline";
+import {
+  CheckCircleIcon,
+  DocumentPlusIcon,
+  HomeIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -8,6 +12,11 @@ import { usePathname } from "next/navigation";
 // Depending on the size of the application, this would be stored in a database.
 const links = [
   { name: "Home", href: "/dashboard/cookbooks", icon: HomeIcon },
+  {
+    name: "New Recipe",
+    href: "/dashboard/recipe/create",
+    icon: DocumentPlusIcon,
+  },
   {
     name: "Profile",
     href: "/dashboard/profile",
