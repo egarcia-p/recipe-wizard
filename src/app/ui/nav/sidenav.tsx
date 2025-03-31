@@ -1,9 +1,8 @@
 import Link from "next/link";
 import NavLinks from "./nav-links";
-import { signOut } from "@/auth";
-import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import logo from "../../../../public/logo.svg";
 import Image from "next/image";
+import SessionLinks from "./session-links";
 
 export default function SideNav() {
   return (
@@ -24,8 +23,7 @@ export default function SideNav() {
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-white md:block"></div>
-        <a href="/api/auth/login">Login</a>
-        <a href="/api/auth/logout">Logout</a>
+        <SessionLinks />
       </div>
     </div>
   );
