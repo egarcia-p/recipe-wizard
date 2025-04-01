@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Recipes",
 };
 
-export const getRecipes = async ({ cookbook_id }: { cookbook_id: string }) => {
+const getRecipes = async ({ cookbook_id }: { cookbook_id: string }) => {
   try {
     const { accessToken } = await getAccessToken();
 
