@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -13,9 +14,9 @@ export default function Home() {
           Welcome to{" Recipe Wizard App"}
         </h1>
         <div className="flex flex-col w-full gap-4">
-          <a href="/api/auth/login">
+          <Link href="/api/auth/login">
             <Button className="w-full justify-center">Get Started</Button>
-          </a>
+          </Link>
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>

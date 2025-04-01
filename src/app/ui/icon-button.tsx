@@ -4,11 +4,7 @@ interface Props {
   className?: string;
 }
 export default function IconButton(props: Props) {
-  const {
-    children,
-    onClick = (event: React.MouseEvent<HTMLButtonElement>) => {},
-    className = "",
-  } = props;
+  const { children, onClick = () => {}, className = "" } = props;
   return (
     <button
       onClick={onClick}

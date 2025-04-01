@@ -1,17 +1,10 @@
 import {
   fetchCategories,
   fetchCookbooks,
-  fetchIngredients,
   fetchSubcategories,
   fetchUoms,
 } from "@/app/lib/data";
-import {
-  Category,
-  Cookbook,
-  Ingredient,
-  Subcategory,
-  Uom,
-} from "../../../types/types";
+import { Category, Cookbook, Subcategory, Uom } from "../../../types/types";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import Form from "@/app/ui/recipe/create-form";
 import { Metadata } from "next";
@@ -72,11 +65,7 @@ export const getFormData = async (): Promise<FormDataResult> => {
   }
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function Page() {
   const formDataResult = await getFormData();
 
   //TODO add better error handling
