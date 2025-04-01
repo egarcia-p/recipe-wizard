@@ -1,9 +1,8 @@
 "use client";
 
-import { Ingredient, SectionForm, Uom } from "@/app/types/types";
+import { SectionForm, Uom } from "@/app/types/types";
 import { Button } from "../button";
 import SearchableDropdown from "../searchable-dropdown";
-import { useState } from "react";
 import { SearchIngredient } from "./buttons";
 type CallbackSectionFunction = (
   index: number,
