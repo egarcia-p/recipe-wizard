@@ -18,6 +18,7 @@ import {
 } from "@/app/types/types";
 import Form from "@/app/ui/recipe/edit-form";
 import { ErrorMessage } from "@/app/ui/error-message";
+import { PagePropsDashboard } from "@/app/types/types";
 
 export const metadata: Metadata = {
   title: "Edit Recipe",
@@ -37,7 +38,7 @@ export interface FormDataError {
 
 export type FormDataResult = FormDataSuccess | FormDataError;
 
-export const getFormData = async (): Promise<FormDataResult> => {
+const getFormData = async (): Promise<FormDataResult> => {
   try {
     const { accessToken } = await getAccessToken();
 
@@ -82,7 +83,7 @@ export const getFormData = async (): Promise<FormDataResult> => {
   }
 };
 
-export const getRecipe = async ({ id }: { id: string }) => {
+const getRecipe = async ({ id }: { id: string }) => {
   try {
     const { accessToken } = await getAccessToken();
 
@@ -105,8 +106,10 @@ export const getRecipe = async ({ id }: { id: string }) => {
   }
 };
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const recipe: Recipe = await getRecipe({ id: params.id });
+export default async function Page({ params }: PagePropsDashboard) {
+  const recipe: Recipe = await getRecipe({
+    id: await params.then((params) => params.id),
+  });
 
   const formDataResult = await getFormData();
 

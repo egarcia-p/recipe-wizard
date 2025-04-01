@@ -127,3 +127,8 @@ export interface USDA_Ingredient {
   fdcId: number;
   description: string;
 }
+
+export interface PagePropsDashboard {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ name: string }>;
+}

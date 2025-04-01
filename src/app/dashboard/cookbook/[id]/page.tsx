@@ -1,16 +1,22 @@
 import { Metadata } from "next";
 import { fetchRecipesByUSer, fetchRecipesForCookbook } from "../../../lib/data";
 import { Recipe } from "../../../types/types";
-import { getAccessToken } from "@auth0/nextjs-auth0";
 import { Card } from "@/app/ui/dashboard/card";
+import { PagePropsDashboard } from "@/app/types/types";
+import { getSession } from "@auth0/nextjs-auth0/edge";
 
 export const metadata: Metadata = {
   title: "Recipes",
 };
 
-const getRecipes = async ({ cookbook_id }: { cookbook_id: string }) => {
+const getRecipes = async ({
+  cookbook_id,
+}: {
+  cookbook_id: string;
+}): Promise<Recipe[]> => {
   try {
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     if (!accessToken) {
       throw new Error("Failed to get access token.");
@@ -38,12 +44,9 @@ const getRecipes = async ({ cookbook_id }: { cookbook_id: string }) => {
 export default async function Page({
   params,
   searchParams,
-}: {
-  params: { id: string };
-  searchParams: { name?: string };
-}) {
-  const cookbook_id = params.id;
-  const name = searchParams.name;
+}: PagePropsDashboard) {
+  const cookbook_id = await params.then((params) => params.id);
+  const name = await searchParams.then((searchParams) => searchParams.name);
 
   const recipes: Recipe[] = await getRecipes({ cookbook_id });
 

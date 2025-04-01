@@ -26,7 +26,7 @@ export interface FormDataError {
 
 export type FormDataResult = FormDataSuccess | FormDataError;
 
-export const getFormData = async (): Promise<FormDataResult> => {
+const getFormData = async (): Promise<FormDataResult> => {
   try {
     const { accessToken } = await getAccessToken();
 

@@ -3,12 +3,13 @@ import { fetchReciepeById, fetchUser } from "../../../lib/data";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { RecipeComponent } from "@/app/ui/recipe/recipe";
 import { Recipe, User } from "@/app/types/types";
+import { PagePropsDashboard } from "@/app/types/types";
 
 export const metadata: Metadata = {
   title: "Recipes",
 };
 
-export const getRecipe = async ({ id }: { id: string }) => {
+const getRecipe = async ({ id }: { id: string }) => {
   try {
     const { accessToken } = await getAccessToken();
 
@@ -29,7 +30,7 @@ export const getRecipe = async ({ id }: { id: string }) => {
   }
 };
 
-export const getUser = async () => {
+const getUser = async () => {
   try {
     const { accessToken } = await getAccessToken();
 
@@ -49,8 +50,10 @@ export const getUser = async () => {
   }
 };
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const recipe: Recipe = await getRecipe({ id: params.id });
+export default async function Page({ params }: PagePropsDashboard) {
+  const recipe: Recipe = await getRecipe({
+    id: await params.then((params) => params.id),
+  });
   const user: User = await getUser();
 
   return (
