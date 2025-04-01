@@ -40,7 +40,7 @@ export default async function Page({
   params,
   searchParams,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
   searchParams: SearchParams;
 }) {
   const cookbook_id = (await params).id;
@@ -49,7 +49,7 @@ export default async function Page({
   return (
     <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
       <h1 className="text-4xl font-bold text-center sm:text-left">
-        Cookbok: {searchParams.name}
+        Cookbook: {searchParams.name}
       </h1>
 
       <div className="flex flex-row gap-4 flex-wrap w-full">
