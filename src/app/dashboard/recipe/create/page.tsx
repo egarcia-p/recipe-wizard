@@ -74,8 +74,7 @@ export default async function Page() {
     return <div>Error: {formDataResult.error}</div>;
   }
 
-  const { cookbooks, categories, subcategories, ingredients, uoms } =
-    formDataResult;
+  const { cookbooks, categories, subcategories, uoms } = formDataResult;
 
   return (
     <main>
@@ -84,7 +83,6 @@ export default async function Page() {
         cookbooks={cookbooks}
         categories={categories}
         subcategories={subcategories}
-        ingredients={ingredients}
         uoms={uoms}
       />
     </main>

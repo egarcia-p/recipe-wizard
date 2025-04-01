@@ -1,13 +1,7 @@
 "use client";
 
 import { createRecipe } from "@/app/lib/action";
-import {
-  Category,
-  Cookbook,
-  Ingredient,
-  Subcategory,
-  Uom,
-} from "@/app/types/types";
+import { Category, Cookbook, Subcategory, Uom } from "@/app/types/types";
 import Link from "next/link";
 import { startTransition, useActionState, useState } from "react";
 import { Button } from "../button";
@@ -18,13 +12,11 @@ export default function Form({
   cookbooks,
   categories,
   subcategories,
-  ingredients,
   uoms,
 }: {
   cookbooks: Cookbook[];
   categories: Category[];
   subcategories: Subcategory[];
-  ingredients: Ingredient[];
   uoms: Uom[];
 }) {
   const initialState = { message: "", errors: {} };
@@ -447,7 +439,6 @@ export default function Form({
             key={sectionIndex}
             section={section}
             sectionIndex={sectionIndex}
-            ingredients={ingredients}
             uoms={uoms}
             handleSectionChange={handleSectionChange}
             handleStepChange={handleStepChange}

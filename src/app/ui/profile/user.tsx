@@ -11,7 +11,10 @@ export default function ProfileClient() {
   return (
     user && (
       <div>
-        <img src={user.picture} alt={user.name} />
+        <img
+          src={user.picture ? user.picture : ""}
+          alt={user.name ? user.name : ""}
+        />
         <h2>{user.name}</h2>
         <p>{user.email}</p>
       </div>

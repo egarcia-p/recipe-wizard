@@ -1,7 +1,7 @@
 import Link from "next/link";
 import NavLinks from "./nav-links";
 import SessionLinks from "./session-links";
-import { getSession } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0/edge";
 
 export default async function SideNav() {
   const session = await getSession();

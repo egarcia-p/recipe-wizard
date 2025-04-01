@@ -199,7 +199,7 @@ export function CreateSectionComponent({
                             label="name"
                             id="id"
                             selectedVal={ingredient.uom_id}
-                            handleChange={(value) =>
+                            handleChange={(value: string) =>
                               handleIngredientChange(
                                 sectionIndex,
                                 ingredientIndex,

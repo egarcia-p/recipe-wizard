@@ -1,12 +1,13 @@
 // import { auth } from "@/auth";
 import { Metadata } from "next";
-import { getSession } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0/edge";
 
 export const metadata: Metadata = {
   title: "Profile",
 };
 export default async function Page() {
-  const { user } = await getSession();
+  const session = await getSession();
+  const user = session?.user;
 
   return (
     // <main>
