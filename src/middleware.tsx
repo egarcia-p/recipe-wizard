@@ -63,9 +63,3 @@ export const config = {
     // Add more protected routes as needed
   ],
 };
-
-interface DecodedToken {
-  scope?: string;
-  permissions?: string[];
-  [key: string]: any;
-}

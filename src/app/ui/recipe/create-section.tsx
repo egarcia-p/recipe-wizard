@@ -28,7 +28,6 @@ type CallbackNewRecipeIngredient = (sectionIndex: number) => void;
 export function CreateSectionComponent({
   section,
   sectionIndex,
-  ingredients,
   uoms,
   handleSectionChange,
   handleStepChange,
@@ -38,7 +37,6 @@ export function CreateSectionComponent({
 }: {
   section: SectionForm;
   sectionIndex: number;
-  ingredients: Ingredient[];
   uoms: Uom[];
   handleSectionChange: CallbackSectionFunction;
   handleStepChange: CallbackStepFunction;
@@ -46,12 +44,6 @@ export function CreateSectionComponent({
   handleNewStep: CallbackNewStep;
   handleNewRecipeIngredient: CallbackNewRecipeIngredient;
 }) {
-  const [ingredientInput, setIngredientInput] = useState(
-    "Select ingredient..."
-  );
-
-  const [uomInput, setUomInput] = useState("Select Unit of Measure...");
-
   return (
     <>
       {/* Sections */}

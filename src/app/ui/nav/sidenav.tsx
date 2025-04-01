@@ -1,10 +1,11 @@
 import Link from "next/link";
 import NavLinks from "./nav-links";
-import logo from "../../../../public/logo.svg";
-import Image from "next/image";
 import SessionLinks from "./session-links";
+import { getSession } from "@auth0/nextjs-auth0";
 
-export default function SideNav() {
+export default async function SideNav() {
+  const session = await getSession();
+
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2 border">
       <Link className="" href="/">
@@ -23,7 +24,7 @@ export default function SideNav() {
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-white md:block"></div>
-        <SessionLinks />
+        {session?.user && <SessionLinks user={session.user} />}
       </div>
     </div>
   );
