@@ -1,7 +1,7 @@
 "use server";
 
 import z from "zod";
-import { getAccessToken } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0/edge";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -208,7 +208,8 @@ export async function createRecipe(prevState: RecipeState, formData: FormData) {
       cookbook_id: cookbook_id,
     };
 
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     // Call API to create recipe
     const response = await fetch(SERVER_URL + "/api/v1/recipes/create", {
@@ -317,7 +318,8 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
       cookbook_id: cookbook_id,
     };
 
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     // Call API to edit recipe
     const response = await fetch(
@@ -372,7 +374,8 @@ export async function updateRecipe(prevState: RecipeState, formData: FormData) {
 
 export async function deleteRecipe(id: number) {
   try {
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     // Call API to edit recipe
     const response = await fetch(SERVER_URL + "/api/v1/recipes/destroy/" + id, {
@@ -442,7 +445,8 @@ export async function createCookbook(
       name: name,
     };
 
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     // Call API to create cookbook
     const response = await fetch(SERVER_URL + "/api/v1/cookbooks/create", {

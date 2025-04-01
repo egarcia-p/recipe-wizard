@@ -5,7 +5,7 @@ import {
   fetchUoms,
 } from "@/app/lib/data";
 import { Category, Cookbook, Subcategory, Uom } from "../../../types/types";
-import { getAccessToken } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0/edge";
 import Form from "@/app/ui/recipe/create-form";
 import { Metadata } from "next";
 
@@ -28,7 +28,8 @@ export type FormDataResult = FormDataSuccess | FormDataError;
 
 const getFormData = async (): Promise<FormDataResult> => {
   try {
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     if (!accessToken) {
       throw new Error("Failed to get access token.");

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { fetchReciepeById, fetchUser } from "../../../lib/data";
-import { getAccessToken } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0/edge";
 import { RecipeComponent } from "@/app/ui/recipe/recipe";
 import { Recipe, User } from "@/app/types/types";
 import { PagePropsDashboard } from "@/app/types/types";
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 
 const getRecipe = async ({ id }: { id: string }) => {
   try {
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     if (!accessToken) {
       throw new Error("Failed to get access token.");
@@ -32,7 +33,8 @@ const getRecipe = async ({ id }: { id: string }) => {
 
 const getUser = async () => {
   try {
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     if (!accessToken) {
       throw new Error("Failed to get access token.");

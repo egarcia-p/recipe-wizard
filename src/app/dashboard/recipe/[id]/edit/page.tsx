@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { fetchReciepeById } from "@/app/lib/data";
-import { getAccessToken } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0/edge";
 import {
   fetchCategories,
   fetchCookbooks,
@@ -40,7 +40,8 @@ export type FormDataResult = FormDataSuccess | FormDataError;
 
 const getFormData = async (): Promise<FormDataResult> => {
   try {
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     if (!accessToken) {
       throw new Error("Failed to get access token.");
@@ -85,7 +86,8 @@ const getFormData = async (): Promise<FormDataResult> => {
 
 const getRecipe = async ({ id }: { id: string }) => {
   try {
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     if (!accessToken) {
       throw new Error("Failed to get access token.");

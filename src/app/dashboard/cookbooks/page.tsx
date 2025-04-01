@@ -2,7 +2,7 @@ import { fetchCookbooks } from "@/app/lib/data";
 import { Cookbook } from "@/app/types/types";
 import { CookbookCard } from "@/app/ui/dashboard/cookbook-card";
 import { CreateCard } from "@/app/ui/dashboard/create-card";
-import { getAccessToken } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0/edge";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 
 const getCookbooks = async () => {
   try {
-    const { accessToken } = await getAccessToken();
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     if (!accessToken) {
       throw new Error("Failed to get access token.");
