@@ -3,7 +3,6 @@ import { fetchRecipesByUSer, fetchRecipesForCookbook } from "../../../lib/data";
 import { Recipe } from "../../../types/types";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { Card } from "@/app/ui/dashboard/card";
-import { SearchParams } from "next/dist/server/request/search-params";
 
 export const metadata: Metadata = {
   title: "Recipes",
@@ -41,15 +40,17 @@ export default async function Page({
   searchParams,
 }: {
   params: { id: string };
-  searchParams: SearchParams;
+  searchParams: { name?: string };
 }) {
-  const cookbook_id = (await params).id;
+  const cookbook_id = params.id;
+  const name = searchParams.name;
+
   const recipes: Recipe[] = await getRecipes({ cookbook_id });
 
   return (
     <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
       <h1 className="text-4xl font-bold text-center sm:text-left">
-        Cookbook: {searchParams.name}
+        Cookbook: {name}
       </h1>
 
       <div className="flex flex-row gap-4 flex-wrap w-full">
