@@ -4,7 +4,6 @@ import { updateRecipe } from "@/app/lib/action";
 import {
   Category,
   Cookbook,
-  Ingredient,
   Recipe,
   Subcategory,
   Uom,
@@ -23,17 +22,17 @@ const transformRecipeToForm = (recipe: Recipe): RecipeForm => {
   return {
     ...recipe,
     sections: recipe.sections.map((section: Section) => ({
-      id: section.id,
+      id: section.id.toString(),
       name: section.name,
       sort_number: section.sort_number,
       steps_attributes: section.steps.map((step: Step) => ({
-        id: step.id,
+        id: step.id.toString(),
         description: step.description,
         step_number: step.step_number,
       })),
       recipe_ingredients_attributes: section.recipe_ingredients.map(
         (ingredient: RecipeIngredient) => ({
-          id: ingredient.id,
+          id: ingredient.id.toString(),
           ingredient_id: ingredient.ingredient_id,
           uom_id: ingredient.uom_id,
           quantity: ingredient.quantity,
@@ -45,19 +44,23 @@ const transformRecipeToForm = (recipe: Recipe): RecipeForm => {
   };
 };
 
+type StepField = keyof Pick<Step, "description" | "step_number">;
+type IngredientField = keyof Pick<
+  RecipeIngredient,
+  "ingredient_id" | "quantity" | "uom_id" | "fdc_id" | "name"
+>;
+
 export default function Form({
   recipe,
   cookbooks,
   categories,
   subcategories,
-  ingredients,
   uoms,
 }: {
   recipe: Recipe;
   cookbooks: Cookbook[];
   categories: Category[];
   subcategories: Subcategory[];
-  ingredients: Ingredient[];
   uoms: Uom[];
 }) {
   const initialState = { message: "", errors: {} };
@@ -66,28 +69,48 @@ export default function Form({
   const recipeForm: RecipeForm = transformRecipeToForm(recipe);
   const [sections, setSections] = useState(recipeForm.sections);
 
-  const handleSectionChange = (index, field, value) => {
+  const handleSectionChange = (
+    index: number,
+    field: keyof Section,
+    value: string | number
+  ): void => {
     const newSections = [...sections];
-    newSections[index][field] = value;
-    setSections(newSections);
+    if (typeof value === "string" || typeof value === "number") {
+      newSections[index] = {
+        ...newSections[index],
+        [field]: value,
+      };
+      setSections(newSections);
+    }
   };
 
-  const handleStepChange = (sectionIndex, stepIndex, field, value) => {
+  const handleStepChange = (
+    sectionIndex: number,
+    stepIndex: number,
+    field: StepField,
+    value: string | number
+  ): void => {
     const newSections = [...sections];
-    newSections[sectionIndex].steps_attributes[stepIndex][field] = value;
+    newSections[sectionIndex].steps_attributes[stepIndex] = {
+      ...newSections[sectionIndex].steps_attributes[stepIndex],
+      [field]: value,
+    };
     setSections(newSections);
   };
 
   const handleIngredientChange = (
-    sectionIndex,
-    ingredientIndex,
-    field,
-    value
-  ) => {
+    sectionIndex: number,
+    ingredientIndex: number,
+    field: IngredientField,
+    value: string | number | null
+  ): void => {
     const newSections = [...sections];
-    newSections[sectionIndex].recipe_ingredients_attributes[ingredientIndex][
-      field
-    ] = value;
+    newSections[sectionIndex].recipe_ingredients_attributes[ingredientIndex] = {
+      ...newSections[sectionIndex].recipe_ingredients_attributes[
+        ingredientIndex
+      ],
+      [field]: value,
+    };
     setSections(newSections);
   };
 
@@ -105,7 +128,7 @@ export default function Form({
     ]);
   };
 
-  const handleNewStep = (sectionIndex) => {
+  const handleNewStep = (sectionIndex: number) => {
     const newSections = [...sections];
     newSections[sectionIndex].steps_attributes.push({
       description: "",
@@ -114,7 +137,7 @@ export default function Form({
     setSections(newSections);
   };
 
-  const handleNewRecipeIngredient = (sectionIndex) => {
+  const handleNewRecipeIngredient = (sectionIndex: number) => {
     const newSections = [...sections];
     newSections[sectionIndex].recipe_ingredients_attributes.push({
       ingredient_id: 0,
@@ -126,20 +149,37 @@ export default function Form({
     setSections(newSections);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append("recipe_id", event.target.recipe_id.value);
-    formData.append("title", event.target.title.value);
-    formData.append("subtitle", event.target.subtitle.value);
-    formData.append("author", event.target.author.value);
-    formData.append("servings", event.target.servings.value);
-    formData.append("total_time", event.target.total_time.value);
-    formData.append("category_id", event.target.category_id.value);
-    formData.append("subcategory_id", event.target.subcategory_id.value);
-    formData.append("cookbook_id", event.target.cookbook_id.value);
-    formData.append("sections", JSON.stringify(sections));
+  interface FormElements extends HTMLFormControlsCollection {
+    title: HTMLInputElement;
+    subtitle: HTMLInputElement;
+    author: HTMLInputElement;
+    servings: HTMLInputElement;
+    total_time: HTMLInputElement;
+    category_id: HTMLSelectElement;
+    subcategory_id: HTMLSelectElement;
+    cookbook_id: HTMLSelectElement;
+  }
 
+  interface RecipeFormElement extends HTMLFormElement {
+    readonly elements: FormElements;
+  }
+
+  const handleSubmit = async (
+    event: React.FormEvent<RecipeFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+    const form = event.currentTarget;
+
+    const formData = new FormData();
+    formData.append("title", form.elements.title.value);
+    formData.append("subtitle", form.elements.subtitle.value);
+    formData.append("author", form.elements.author.value);
+    formData.append("servings", form.elements.servings.value);
+    formData.append("total_time", form.elements.total_time.value);
+    formData.append("category_id", form.elements.category_id.value);
+    formData.append("subcategory_id", form.elements.subcategory_id.value);
+    formData.append("cookbook_id", form.elements.cookbook_id.value);
+    formData.append("sections", JSON.stringify(sections));
     // Send formData to the server
     startTransition(async () => {
       await dispatch(formData);
@@ -483,7 +523,6 @@ export default function Form({
             key={sectionIndex}
             section={section}
             sectionIndex={sectionIndex}
-            ingredients={ingredients}
             uoms={uoms}
             handleSectionChange={handleSectionChange}
             handleStepChange={handleStepChange}

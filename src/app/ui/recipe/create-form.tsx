@@ -8,6 +8,32 @@ import { Button } from "../button";
 import { CreateSectionComponent } from "./create-section";
 import { ErrorMessage } from "../error-message";
 
+interface Section {
+  name: string;
+  sort_number: number;
+  steps_attributes: Step[];
+  recipe_ingredients_attributes: RecipeIngredient[];
+}
+
+interface Step {
+  description: string;
+  step_number: number;
+}
+
+interface RecipeIngredient {
+  ingredient_id: number;
+  quantity: number;
+  uom_id: number;
+  fdc_id: number;
+  name: string;
+}
+
+type StepField = keyof Pick<Step, "description" | "step_number">;
+type IngredientField = keyof Pick<
+  RecipeIngredient,
+  "ingredient_id" | "quantity" | "uom_id" | "fdc_id" | "name"
+>;
+
 export default function Form({
   cookbooks,
   categories,
@@ -33,28 +59,48 @@ export default function Form({
     },
   ]);
 
-  const handleSectionChange = (index, field, value) => {
+  const handleSectionChange = (
+    index: number,
+    field: keyof Section,
+    value: string | number
+  ): void => {
     const newSections = [...sections];
-    newSections[index][field] = value;
-    setSections(newSections);
+    if (typeof value === "string" || typeof value === "number") {
+      newSections[index] = {
+        ...newSections[index],
+        [field]: value,
+      };
+      setSections(newSections);
+    }
   };
 
-  const handleStepChange = (sectionIndex, stepIndex, field, value) => {
+  const handleStepChange = (
+    sectionIndex: number,
+    stepIndex: number,
+    field: StepField,
+    value: string | number
+  ): void => {
     const newSections = [...sections];
-    newSections[sectionIndex].steps_attributes[stepIndex][field] = value;
+    newSections[sectionIndex].steps_attributes[stepIndex] = {
+      ...newSections[sectionIndex].steps_attributes[stepIndex],
+      [field]: value,
+    };
     setSections(newSections);
   };
 
   const handleIngredientChange = (
-    sectionIndex,
-    ingredientIndex,
-    field,
-    value
-  ) => {
+    sectionIndex: number,
+    ingredientIndex: number,
+    field: IngredientField,
+    value: string | number | null
+  ): void => {
     const newSections = [...sections];
-    newSections[sectionIndex].recipe_ingredients_attributes[ingredientIndex][
-      field
-    ] = value;
+    newSections[sectionIndex].recipe_ingredients_attributes[ingredientIndex] = {
+      ...newSections[sectionIndex].recipe_ingredients_attributes[
+        ingredientIndex
+      ],
+      [field]: value,
+    };
     setSections(newSections);
   };
 
@@ -72,8 +118,8 @@ export default function Form({
     ]);
   };
 
-  const handleNewStep = (sectionIndex) => {
-    const newSections = [...sections];
+  const handleNewStep = (sectionIndex: number): void => {
+    const newSections: Section[] = [...sections];
     newSections[sectionIndex].steps_attributes.push({
       description: "",
       step_number: newSections[sectionIndex].steps_attributes.length + 1,
@@ -81,8 +127,8 @@ export default function Form({
     setSections(newSections);
   };
 
-  const handleNewRecipeIngredient = (sectionIndex) => {
-    const newSections = [...sections];
+  const handleNewRecipeIngredient = (sectionIndex: number): void => {
+    const newSections: Section[] = [...sections];
     newSections[sectionIndex].recipe_ingredients_attributes.push({
       ingredient_id: 0,
       quantity: 1,
@@ -93,17 +139,36 @@ export default function Form({
     setSections(newSections);
   };
 
-  const handleSubmit = async (event) => {
+  interface FormElements extends HTMLFormControlsCollection {
+    title: HTMLInputElement;
+    subtitle: HTMLInputElement;
+    author: HTMLInputElement;
+    servings: HTMLInputElement;
+    total_time: HTMLInputElement;
+    category_id: HTMLSelectElement;
+    subcategory_id: HTMLSelectElement;
+    cookbook_id: HTMLSelectElement;
+  }
+
+  interface RecipeFormElement extends HTMLFormElement {
+    readonly elements: FormElements;
+  }
+
+  const handleSubmit = async (
+    event: React.FormEvent<RecipeFormElement>
+  ): Promise<void> => {
     event.preventDefault();
+    const form = event.currentTarget;
+
     const formData = new FormData();
-    formData.append("title", event.target.title.value);
-    formData.append("subtitle", event.target.subtitle.value);
-    formData.append("author", event.target.author.value);
-    formData.append("servings", event.target.servings.value);
-    formData.append("total_time", event.target.total_time.value);
-    formData.append("category_id", event.target.category_id.value);
-    formData.append("subcategory_id", event.target.subcategory_id.value);
-    formData.append("cookbook_id", event.target.cookbook_id.value);
+    formData.append("title", form.elements.title.value);
+    formData.append("subtitle", form.elements.subtitle.value);
+    formData.append("author", form.elements.author.value);
+    formData.append("servings", form.elements.servings.value);
+    formData.append("total_time", form.elements.total_time.value);
+    formData.append("category_id", form.elements.category_id.value);
+    formData.append("subcategory_id", form.elements.subcategory_id.value);
+    formData.append("cookbook_id", form.elements.cookbook_id.value);
     formData.append("sections", JSON.stringify(sections));
 
     // Send formData to the server

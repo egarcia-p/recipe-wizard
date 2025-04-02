@@ -71,14 +71,20 @@ export default function IngredientConfirm(props: Props) {
             <div className="relative h-10">
               <SearchableDropdown
                 options={ingredients}
-                label="name"
                 id="id"
                 selectedVal={fdcId}
-                handleChange={(value: string) => {
-                  setFdcId(value);
-                  setName(
-                    ingredients.find((i) => i.id == parseInt(value))?.name || ""
-                  );
+                handleChange={(value: string | number | null) => {
+                  if (value === null) {
+                    setFdcId("");
+                    setName("");
+                  } else {
+                    const stringValue = value.toString();
+                    setFdcId(stringValue);
+                    setName(
+                      ingredients.find((i) => i.id == parseInt(stringValue))
+                        ?.name || ""
+                    );
+                  }
                 }}
               />
             </div>

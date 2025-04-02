@@ -1,31 +1,38 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+
+// OPtions type { id: number; name: string; }
+interface Option {
+  id: number;
+  name: string;
+}
 
 const SearchableDropdown = ({
   options,
-  label,
   id,
   selectedVal,
   handleChange,
+}: {
+  options: Option[];
+  id: string;
+  selectedVal: string | number | null;
+  handleChange: (value: number) => void;
 }) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    document.addEventListener("click", toggle);
-    return () => document.removeEventListener("click", toggle);
-  }, []);
+  // useEffect(() => {
 
-  const selectOption = (option) => {
+  //   document.addEventListener("click", toggle);
+  //   return () => document.removeEventListener("click", toggle);
+  // }, []);
+
+  const selectOption = (option: Option): void => {
     setQuery(() => "");
-    handleChange(option[id]);
+    handleChange(option.id);
     setIsOpen((isOpen) => !isOpen);
   };
-
-  function toggle(e) {
-    setIsOpen(e && e.target === inputRef.current);
-  }
 
   const getDisplayValue = () => {
     if (query) return query;
@@ -33,16 +40,16 @@ const SearchableDropdown = ({
       const selectedOption = options.find(
         (option) => option.id === selectedVal
       );
-      return selectedOption.name;
+      return selectedOption ? selectedOption.name : "";
     }
 
     return "";
   };
 
-  const filter = (options) => {
-    return options.filter(
-      (option) => option[label].toLowerCase().indexOf(query.toLowerCase()) > -1
-    );
+  const filter = (options: Option[]) => {
+    return options.filter((option) => {
+      return option.name.toLowerCase().includes(query.toLowerCase());
+    });
   };
 
   return (
@@ -57,9 +64,11 @@ const SearchableDropdown = ({
             name="searchTerm"
             onChange={(e) => {
               setQuery(e.target.value);
-              handleChange(null);
+              handleChange(0);
             }}
-            onClick={toggle}
+            onClick={(e) => {
+              setIsOpen(e && e.target === inputRef.current);
+            }}
           />
         </div>
         <div
@@ -79,11 +88,11 @@ const SearchableDropdown = ({
             <div
               onClick={() => selectOption(option)}
               className={`box-border cursor-pointer block px-2.5 py-2 pl-10 ${
-                option[label] === selectedVal ? "bg-[#f2f9fc] " : ""
+                option.name === selectedVal ? "bg-[#f2f9fc] " : ""
               }`}
               key={`${id}-${index}`}
             >
-              {option[label]}
+              {option.name}
             </div>
           );
         })}

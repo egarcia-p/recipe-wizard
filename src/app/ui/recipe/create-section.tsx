@@ -1,28 +1,44 @@
 "use client";
 
-import { SectionForm, Uom } from "@/app/types/types";
+import { Uom } from "@/app/types/types";
 import { Button } from "../button";
 import SearchableDropdown from "../searchable-dropdown";
 import { SearchIngredient } from "./buttons";
-type CallbackSectionFunction = (
-  index: number,
-  field: string,
-  value: string
-) => void;
-type CallbackStepFunction = (
-  sectionIndex: number,
-  index: number,
-  field: string,
-  value: string
-) => void;
-type CallbackIngredientFunction = (
-  sectionIndex: number,
-  index: number,
-  field: string,
-  value: string
-) => void;
-type CallbackNewStep = (sectionIndex: number) => void;
-type CallbackNewRecipeIngredient = (sectionIndex: number) => void;
+import { SectionForm as Section } from "@/app/types/types";
+import { StepForm as Step } from "../../types/types";
+import { RecipeIngredientForm as RecipeIngredient } from "@/app/types/types";
+
+type SectionField = keyof Pick<Section, "name" | "sort_number">;
+type StepField = keyof Pick<Step, "description" | "step_number">;
+type IngredientField = keyof Pick<
+  RecipeIngredient,
+  "ingredient_id" | "quantity" | "uom_id" | "fdc_id" | "name"
+>;
+
+interface CreateSectionComponentProps {
+  section: Section;
+  sectionIndex: number;
+  uoms: Uom[];
+  handleSectionChange: (
+    index: number,
+    field: SectionField,
+    value: string | number
+  ) => void;
+  handleStepChange: (
+    sectionIndex: number,
+    stepIndex: number,
+    field: StepField,
+    value: string | number
+  ) => void;
+  handleIngredientChange: (
+    sectionIndex: number,
+    ingredientIndex: number,
+    field: IngredientField,
+    value: string | number | null
+  ) => void;
+  handleNewStep: (sectionIndex: number) => void;
+  handleNewRecipeIngredient: (sectionIndex: number) => void;
+}
 
 export function CreateSectionComponent({
   section,
@@ -33,16 +49,7 @@ export function CreateSectionComponent({
   handleIngredientChange,
   handleNewStep,
   handleNewRecipeIngredient,
-}: {
-  section: SectionForm;
-  sectionIndex: number;
-  uoms: Uom[];
-  handleSectionChange: CallbackSectionFunction;
-  handleStepChange: CallbackStepFunction;
-  handleIngredientChange: CallbackIngredientFunction;
-  handleNewStep: CallbackNewStep;
-  handleNewRecipeIngredient: CallbackNewRecipeIngredient;
-}) {
+}: CreateSectionComponentProps) {
   return (
     <>
       {/* Sections */}
@@ -196,10 +203,9 @@ export function CreateSectionComponent({
                         <div className="relative h-10">
                           <SearchableDropdown
                             options={uoms}
-                            label="name"
                             id="id"
                             selectedVal={ingredient.uom_id}
-                            handleChange={(value: string) =>
+                            handleChange={(value: number | null) =>
                               handleIngredientChange(
                                 sectionIndex,
                                 ingredientIndex,
