@@ -150,6 +150,7 @@ export default function Form({
   };
 
   interface FormElements extends HTMLFormControlsCollection {
+    recipe_id: HTMLInputElement;
     title: HTMLInputElement;
     subtitle: HTMLInputElement;
     author: HTMLInputElement;
@@ -171,6 +172,7 @@ export default function Form({
     const form = event.currentTarget;
 
     const formData = new FormData();
+    formData.append("recipe_id", form.elements.recipe_id.value);
     formData.append("title", form.elements.title.value);
     formData.append("subtitle", form.elements.subtitle.value);
     formData.append("author", form.elements.author.value);
