@@ -27,9 +27,9 @@ export default function IngredientConfirm(props: Props) {
     return <></>;
   }
 
-  const handleSearch = async () => {
-    console.log("searching for", query);
-    const searchResult = await searchUSDAIngredients(query);
+  const handleSearch = async (dataType: string): Promise<void> => {
+    console.log("searching for", query, "in ", dataType);
+    const searchResult = await searchUSDAIngredients(query, dataType);
 
     const usdaIngredients: USDA_Ingredient[] = searchResult.foods;
     const ingredientsMap = usdaIngredients.map((ingredient) => {
@@ -59,10 +59,16 @@ export default function IngredientConfirm(props: Props) {
             className="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
           />
           <Button
-            onClick={handleSearch}
+            onClick={() => handleSearch("Foundation")}
             className="bg-primary-600 hover:bg-primary-300"
           >
-            Search
+            Search Foundation
+          </Button>
+          <Button
+            onClick={() => handleSearch("Branded")}
+            className="bg-primary-600 hover:bg-primary-300"
+          >
+            Search Branded
           </Button>
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
             Ingredient:
