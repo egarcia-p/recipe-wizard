@@ -127,10 +127,13 @@ export async function fetchUser(accessToken: string) {
   return result;
 }
 
-export async function searchUSDAIngredients(query: string) {
+export async function searchUSDAIngredients(
+  query: string,
+  dataType: string = "Foundation"
+) {
   const response = await fetch(
     USDA_API +
-      `/foods/search?query=description=${query}&dataType=Foundation&pageSize=25&sortBy=fdcId&sortOrder=asc&api_key=${USDA_API_KEY}`,
+      `/foods/search?query=description=${query}&dataType=${dataType}&pageSize=25&sortBy=fdcId&sortOrder=asc&api_key=${USDA_API_KEY}`,
     {
       method: "GET",
       headers: {
