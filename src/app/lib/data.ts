@@ -41,15 +41,28 @@ export async function fetchReciepeById(accessToken: string, id: string) {
 }
 
 export async function fetchCookbooks(accessToken: string) {
-  const response = await fetch(SERVER_URL + "/api/v1/cookbooks/index", {
+  const url = `${SERVER_URL}/api/v1/cookbooks/index`;
+  console.log(`[Content Fetch] Fetching cookbooks from: ${url}`);
+  
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
   });
-  const result = await response.json();
-  return result;
+
+  const text = await response.text();
+  
+  try {
+    const result = JSON.parse(text);
+    return result;
+  } catch (error) {
+    console.error(`[Content Fetch Error] Failed to parse JSON from ${url}`);
+    console.error(`Status: ${response.status} ${response.statusText}`);
+    console.error(`Response Body Preview: ${text.substring(0, 500)}`); // Log first 500 chars
+    throw new Error(`JSON Parse Error: ${error}. Status: ${response.status}. Body: ${text.substring(0, 100)}...`);
+  }
 }
 
 export async function fetchRecipesForCookbook(accessToken: string, id: string) {
