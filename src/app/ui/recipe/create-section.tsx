@@ -1,9 +1,8 @@
 "use client";
 
-import { Uom } from "@/app/types/types";
+import { Ingredient, Uom } from "@/app/types/types";
 import { Button } from "../button";
 import SearchableDropdown from "../searchable-dropdown";
-import { SearchIngredient } from "./buttons";
 import { SectionForm as Section } from "@/app/types/types";
 import { StepForm as Step } from "../../types/types";
 import { RecipeIngredientForm as RecipeIngredient } from "@/app/types/types";
@@ -12,13 +11,14 @@ type SectionField = keyof Pick<Section, "name" | "sort_number">;
 type StepField = keyof Pick<Step, "description" | "step_number">;
 type IngredientField = keyof Pick<
   RecipeIngredient,
-  "ingredient_id" | "quantity" | "uom_id" | "fdc_id" | "name"
+  "ingredient_id" | "quantity" | "uom_id" | "name"
 >;
 
 interface CreateSectionComponentProps {
   section: Section;
   sectionIndex: number;
   uoms: Uom[];
+  ingredients: Ingredient[];
   handleSectionChange: (
     index: number,
     field: SectionField,
@@ -44,6 +44,7 @@ export function CreateSectionComponent({
   section,
   sectionIndex,
   uoms,
+  ingredients,
   handleSectionChange,
   handleStepChange,
   handleIngredientChange,
@@ -113,25 +114,46 @@ export function CreateSectionComponent({
                     key={ingredientIndex}
                     className="py-2 flex flex-wrap gap-4"
                   >
-                    <SearchIngredient
-                      onConfirm={(ingredient: {
-                        fdcId: string;
-                        name: string;
-                      }) => {
-                        handleIngredientChange(
-                          sectionIndex,
-                          ingredientIndex,
-                          "fdc_id",
-                          ingredient.fdcId
-                        );
-                        handleIngredientChange(
-                          sectionIndex,
-                          ingredientIndex,
-                          "name",
-                          ingredient.name
-                        );
-                      }}
-                    />
+                    <div className="mb-4">
+                      <label
+                        htmlFor="name"
+                        className="mb-2 block text-sm font-medium"
+                      >
+                        Ingredient:
+                      </label>
+                      <div className="relative mt-2 rounded-md">
+                        <div className="relative h-10 w-60">
+                          <SearchableDropdown
+                            options={ingredients}
+                            id="ingredient-dropdown"
+                            selectedVal={ingredient.ingredient_id}
+                            handleChange={(value: number | null) => {
+                              handleIngredientChange(
+                                sectionIndex,
+                                ingredientIndex,
+                                "ingredient_id",
+                                value
+                              );
+                              // Find selected ingredient name to update the name field if needed or just for display
+                              // But usually we just store ID. However, the data model stores name too?
+                              // Let's assume we maintain name for now or just rely on ID.
+                              // Previous code set Name too.
+                              const selected = ingredients.find(
+                                (i) => i.id === value
+                              );
+                              if (selected) {
+                                handleIngredientChange(
+                                  sectionIndex,
+                                  ingredientIndex,
+                                  "name",
+                                  selected.name
+                                );
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
                     {ingredient.id && (
                       <input
                         id="id"
@@ -165,32 +187,8 @@ export function CreateSectionComponent({
                         </div>
                       </div>
                     </div>
-                    <div className="mb-4 w-12">
-                      <label
-                        htmlFor="fdc_id"
-                        className="mb-2 block text-sm font-medium"
-                      >
-                        FDC_ID:
-                      </label>
-                      <div className="relative mt-2 rounded-md">
-                        <div className="flex relative h-10">
-                          <div className="my-auto">{ingredient.fdc_id}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mb-4 w-12">
-                      <label
-                        htmlFor="name"
-                        className="mb-2 block text-sm font-medium"
-                      >
-                        Name:
-                      </label>
-                      <div className="relative mt-2 rounded-md">
-                        <div className="flex relative h-10">
-                          <div className="my-auto">{ingredient.name}</div>
-                        </div>
-                      </div>
-                    </div>
+
+
 
                     <div className="mb-4">
                       <label

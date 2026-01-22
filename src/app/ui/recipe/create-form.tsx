@@ -1,7 +1,13 @@
 "use client";
 
 import { createRecipe } from "@/app/lib/action";
-import { Category, Cookbook, Subcategory, Uom } from "@/app/types/types";
+import {
+  Category,
+  Cookbook,
+  Ingredient,
+  Subcategory,
+  Uom,
+} from "@/app/types/types";
 import Link from "next/link";
 import { startTransition, useActionState, useState } from "react";
 import { Button } from "../button";
@@ -24,25 +30,26 @@ interface RecipeIngredient {
   ingredient_id: number;
   quantity: number;
   uom_id: number;
-  fdc_id: number;
   name: string;
 }
 
 type StepField = keyof Pick<Step, "description" | "step_number">;
 type IngredientField = keyof Pick<
   RecipeIngredient,
-  "ingredient_id" | "quantity" | "uom_id" | "fdc_id" | "name"
+  "ingredient_id" | "quantity" | "uom_id" | "name"
 >;
 
 export default function Form({
   cookbooks,
   categories,
   subcategories,
+  ingredients,
   uoms,
 }: {
   cookbooks: Cookbook[];
   categories: Category[];
   subcategories: Subcategory[];
+  ingredients: Ingredient[];
   uoms: Uom[];
 }) {
   const initialState = { message: "", errors: {} };
@@ -54,7 +61,7 @@ export default function Form({
       sort_number: 1,
       steps_attributes: [{ description: "", step_number: 1 }],
       recipe_ingredients_attributes: [
-        { ingredient_id: 0, quantity: 1, uom_id: 0, fdc_id: 0, name: "" },
+        { ingredient_id: 0, quantity: 1, uom_id: 0, name: "" },
       ],
     },
   ]);
@@ -112,7 +119,7 @@ export default function Form({
         sort_number: sections.length + 1,
         steps_attributes: [{ description: "", step_number: 1 }],
         recipe_ingredients_attributes: [
-          { ingredient_id: 0, quantity: 1, uom_id: 0, fdc_id: 0, name: "" },
+          { ingredient_id: 0, quantity: 1, uom_id: 0, name: "" },
         ],
       },
     ]);
@@ -133,7 +140,6 @@ export default function Form({
       ingredient_id: 0,
       quantity: 1,
       uom_id: 0,
-      fdc_id: 0,
       name: "",
     });
     setSections(newSections);
@@ -504,6 +510,7 @@ export default function Form({
             key={sectionIndex}
             section={section}
             sectionIndex={sectionIndex}
+            ingredients={ingredients}
             uoms={uoms}
             handleSectionChange={handleSectionChange}
             handleStepChange={handleStepChange}

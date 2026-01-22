@@ -1,10 +1,17 @@
 import {
   fetchCategories,
   fetchCookbooks,
+  fetchIngredients,
   fetchSubcategories,
   fetchUoms,
 } from "@/app/lib/data";
-import { Category, Cookbook, Subcategory, Uom } from "../../../types/types";
+import {
+  Category,
+  Cookbook,
+  Ingredient,
+  Subcategory,
+  Uom,
+} from "../../../types/types";
 import { getSession } from "@auth0/nextjs-auth0/edge";
 import Form from "@/app/ui/recipe/create-form";
 import { Metadata } from "next";
@@ -17,6 +24,7 @@ export interface FormDataSuccess {
   cookbooks: Cookbook[];
   categories: Category[];
   subcategories: Subcategory[];
+  ingredients: Ingredient[];
   uoms: Uom[];
 }
 
@@ -53,13 +61,15 @@ const getFormData = async (): Promise<FormDataResult> => {
       throw new Error("Failed to fetch subcategories.");
     }
 
+    const ingredients: Ingredient[] = await fetchIngredients(accessToken);
+
     const uoms: Uom[] = await fetchUoms(accessToken);
 
     if (!uoms || uoms.length === 0) {
       throw new Error("Failed to fetch uoms.");
     }
 
-    return { cookbooks, categories, subcategories, uoms };
+    return { cookbooks, categories, subcategories, ingredients, uoms };
   } catch (error) {
     console.error("Error fetching data:", error);
     return { error: "Error fetching data" };
@@ -74,7 +84,8 @@ export default async function Page() {
     return <div>Error: {formDataResult.error}</div>;
   }
 
-  const { cookbooks, categories, subcategories, uoms } = formDataResult;
+  const { cookbooks, categories, subcategories, ingredients, uoms } =
+    formDataResult;
 
   return (
     <main>
@@ -83,6 +94,7 @@ export default async function Page() {
         cookbooks={cookbooks}
         categories={categories}
         subcategories={subcategories}
+        ingredients={ingredients}
         uoms={uoms}
       />
     </main>
