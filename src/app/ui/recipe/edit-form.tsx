@@ -10,6 +10,7 @@ import {
   RecipeForm,
   Section,
   Step,
+  Ingredient,
   RecipeIngredient,
 } from "@/app/types/types";
 import Link from "next/link";
@@ -36,7 +37,6 @@ const transformRecipeToForm = (recipe: Recipe): RecipeForm => {
           ingredient_id: ingredient.ingredient_id,
           uom_id: ingredient.uom_id,
           quantity: ingredient.quantity,
-          fdc_id: ingredient.fdc_id,
           name: ingredient.name,
         })
       ),
@@ -47,7 +47,7 @@ const transformRecipeToForm = (recipe: Recipe): RecipeForm => {
 type StepField = keyof Pick<Step, "description" | "step_number">;
 type IngredientField = keyof Pick<
   RecipeIngredient,
-  "ingredient_id" | "quantity" | "uom_id" | "fdc_id" | "name"
+  "ingredient_id" | "quantity" | "uom_id" | "name"
 >;
 
 export default function Form({
@@ -55,12 +55,15 @@ export default function Form({
   cookbooks,
   categories,
   subcategories,
+
+  ingredients,
   uoms,
 }: {
   recipe: Recipe;
   cookbooks: Cookbook[];
   categories: Category[];
   subcategories: Subcategory[];
+  ingredients: Ingredient[];
   uoms: Uom[];
 }) {
   const initialState = { message: "", errors: {} };
@@ -122,7 +125,7 @@ export default function Form({
         sort_number: sections.length + 1,
         steps_attributes: [{ description: "", step_number: 1 }],
         recipe_ingredients_attributes: [
-          { ingredient_id: 0, quantity: 1, uom_id: 0, fdc_id: 0, name: "" },
+          { ingredient_id: 0, quantity: 1, uom_id: 0, name: "" },
         ],
       },
     ]);
@@ -142,8 +145,8 @@ export default function Form({
     newSections[sectionIndex].recipe_ingredients_attributes.push({
       ingredient_id: 0,
       quantity: 1,
+
       uom_id: 0,
-      fdc_id: 0,
       name: "",
     });
     setSections(newSections);
@@ -525,6 +528,7 @@ export default function Form({
             key={sectionIndex}
             section={section}
             sectionIndex={sectionIndex}
+            ingredients={ingredients}
             uoms={uoms}
             handleSectionChange={handleSectionChange}
             handleStepChange={handleStepChange}

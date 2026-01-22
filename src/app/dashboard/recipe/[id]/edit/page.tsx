@@ -119,7 +119,8 @@ export default async function Page({ params }: PagePropsDashboard) {
     return <ErrorMessage>Error: {formDataResult.error}</ErrorMessage>;
   }
 
-  const { cookbooks, categories, subcategories, uoms } = formDataResult;
+  const { cookbooks, categories, subcategories, ingredients, uoms } =
+    formDataResult;
 
   return (
     <Form
@@ -127,6 +128,7 @@ export default async function Page({ params }: PagePropsDashboard) {
       cookbooks={cookbooks}
       categories={categories}
       subcategories={subcategories}
+      ingredients={ingredients}
       uoms={uoms}
     />
   );

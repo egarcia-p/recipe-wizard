@@ -30,9 +30,9 @@ const SectionSchema = z.object({
       uom_id: z.coerce
         .number()
         .gt(0, { message: "UOM must be greater than 0" }),
-      fdc_id: z.coerce
+      ingredient_id: z.coerce
         .number()
-        .gt(0, { message: "FDC_ID must be greater than 0" }),
+        .gt(0, { message: "Ingredient must be selected" }),
       name: z.string(),
     })
   ),
@@ -59,9 +59,9 @@ const SectionSchemaUpdate = z.object({
       id: z.coerce.number().optional(),
       quantity: z.coerce.number(),
       uom_id: z.coerce.number(),
-      fdc_id: z.coerce
+      ingredient_id: z.coerce
         .number()
-        .gt(0, { message: "FDC_ID must be greater than 0" }),
+        .gt(0, { message: "Ingredient must be selected" }),
       name: z.string(),
     })
   ),
